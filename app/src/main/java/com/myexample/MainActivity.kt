@@ -10,6 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.myexample.data.MyData
+import com.myexample.presentation.MyScreen
+import com.myexample.presentation.Nav
 import com.myexample.presentation.test.TestHome
 import com.myexample.ui.theme.MyExampleTheme
 import com.myexample.viewModel.MyViewModel
@@ -27,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val viewModel: MyViewModel by viewModels()
-                    TestHome(viewModel)
+//                    TestHome(viewModel)
+                    MyScreen(viewModel)
                 }
             }
         }

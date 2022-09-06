@@ -79,5 +79,12 @@ class MyViewModel @Inject constructor(
         _y.value = y
     }
 
+    //全局
+    val navController_Number = MutableStateFlow<Int>(0)
+
+    fun setNavControllerNumber(num: Int) {
+        navController_Number.value = num
+    }
+
 }
 
