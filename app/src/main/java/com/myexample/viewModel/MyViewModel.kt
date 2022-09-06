@@ -20,7 +20,7 @@ class MyViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<List<MyData>>(listOf())
     val state: StateFlow<List<MyData>> = _state
-    
+
     fun getAllData() {
         viewModelScope.launch {
             myRepository.getAllData()
@@ -62,6 +62,21 @@ class MyViewModel @Inject constructor(
         viewModelScope.launch {
             getAllData()
         }
+    }
+
+    //3D
+    private val _x = MutableStateFlow<Float>(0F)
+    val x: StateFlow<Float> = _x
+
+    fun onxStateChanged(x: Float) {
+        _x.value = x
+    }
+
+    private val _y = MutableStateFlow<Float>(0F)
+    val y: StateFlow<Float> = _y
+
+    fun onyStateChanged(y: Float) {
+        _y.value = y
     }
 
 }
