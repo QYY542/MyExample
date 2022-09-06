@@ -1,7 +1,7 @@
 package com.myexample.repository
 
-import com.myexample.data.Detail
-import com.myexample.data.DetailDao
+import com.myexample.data.MyData
+import com.myexample.data.MyDataDao
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -12,27 +12,27 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class MyRepository @Inject constructor(
-    private val detailDao: DetailDao
-){
-    fun getAllData(): Flow<List<Detail>> = detailDao.queryAll()
+    private val myDataDao: MyDataDao
+) {
+    fun getAllData(): Flow<List<MyData>> = myDataDao.getAll()
 
-    suspend fun insert(detail: Detail?){
-        detailDao.insert(detail)
-    }
-
-    suspend fun deleteAll(){
-        detailDao.deleteAll()
-    }
-
-    suspend fun delete(detail: Detail?){
-        if (detail != null) {
-            detailDao.delete(detail)
+    suspend fun insert(myData: MyData?) {
+        if (myData != null) {
+            myDataDao.insert(myData)
         }
     }
 
-    suspend fun update(detail: Detail?){
-        if (detail != null) {
-            detailDao.update(detail)
+    suspend fun deleteAll() {
+        myDataDao.deleteAll()
+    }
+
+    suspend fun deleteById(id: Int) {
+        myDataDao.deleteById(id)
+    }
+
+    suspend fun update(myData: MyData?) {
+        if (myData != null) {
+            myDataDao.update(myData)
         }
     }
 

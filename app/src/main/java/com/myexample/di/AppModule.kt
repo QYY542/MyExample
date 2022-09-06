@@ -3,7 +3,7 @@ package com.myexample.di
 import android.content.Context
 import androidx.room.Room
 import com.myexample.data.AppDatabase
-import com.myexample.data.DetailDao
+import com.myexample.data.MyDataDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +30,5 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDao(database: AppDatabase): DetailDao = database.getDetailDao()
+    fun provideDao(database: AppDatabase): MyDataDao = database.getMyDataDao()
 }

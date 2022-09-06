@@ -10,16 +10,10 @@ import androidx.room.PrimaryKey
 
 //创建数据实体类
 @Entity(tableName = "details")
-data class Detail(
+data class MyData(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id", typeAffinity = ColumnInfo.INTEGER)
     val id: Int? = null,
     var message: String = "",
     var date: String = "2021/1/1",
-    var detailType: DetailType = DetailType()
-)
-//复杂数据
-data class DetailType(
-    val name: String = "无",
-    val triad: Boolean = true
 )

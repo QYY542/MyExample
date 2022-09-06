@@ -10,8 +10,8 @@ import androidx.room.TypeConverters
 
 //@Database(entities = [Detail::class], version = 1)entities为数据类,数据结构变化时version要增加1
 //@TypeConverters(DetailTypeConverters::class,...)指定复杂数据格式转换器,多个转换器之间用逗号隔开
-@Database(entities = [Detail::class], version = 1)
-@TypeConverters(DetailTypeConverters::class)
+@Database(entities = [MyData::class], version = 1, exportSchema = false)
+//@TypeConverters(DetailTypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun getDetailDao(): DetailDao
+    abstract fun getMyDataDao(): MyDataDao
 }

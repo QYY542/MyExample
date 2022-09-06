@@ -1,12 +1,12 @@
 package com.myexample.viewModel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.myexample.data.Detail
+import androidx.lifecycle.viewModelScope
+import com.myexample.data.MyData
 import com.myexample.repository.MyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /*
@@ -16,18 +16,53 @@ import javax.inject.Inject
 @HiltViewModel
 class MyViewModel @Inject constructor(
     private val myRepository: MyRepository
-):ViewModel(){
+) : ViewModel() {
 
-    private val _state = mutableStateOf(HomeState())
-    val state: State<HomeState> = _state
+    private val _state = MutableStateFlow<List<MyData>>(listOf())
+    val state: StateFlow<List<MyData>> = _state
+    
+    fun getAllData() {
+        viewModelScope.launch {
+            myRepository.getAllData()
+                .collect {
+                    _state.value = it
+                }
+        }
+    }
+
+    fun insert(myData: MyData?) {
+        viewModelScope.launch {
+            myRepository.insert(myData)
+            getAllData()
+        }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch {
+            myRepository.deleteAll()
+            getAllData()
+        }
+    }
+
+    fun deleteById(id: Int) {
+        viewModelScope.launch {
+            myRepository.deleteById(id)
+            getAllData()
+        }
+    }
+
+    fun update(myData: MyData?) {
+        viewModelScope.launch {
+            myRepository.update(myData)
+            getAllData()
+        }
+    }
 
     init {
-        
+        viewModelScope.launch {
+            getAllData()
+        }
     }
 
 }
 
-
-data class HomeState(
-    val users: List<Detail> = emptyList()
-)
