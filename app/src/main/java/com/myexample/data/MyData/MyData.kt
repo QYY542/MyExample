@@ -1,4 +1,4 @@
-package com.myexample.data
+package com.myexample.data.MyData
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -14,6 +14,10 @@ data class MyData(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id", typeAffinity = ColumnInfo.INTEGER)
     val id: Int? = null,
-    var message: String = "",
-    var date: String = "2021/1/1",
+    val title: String = "",
+    val detail: String = "",
+    val importance: Int = 0,
+    val complete: Boolean = false,
+    val date: String = "2021/1/1"
+
 )

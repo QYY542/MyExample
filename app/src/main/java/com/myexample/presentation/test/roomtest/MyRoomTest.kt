@@ -11,8 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.myexample.data.MyData
+import com.myexample.data.MyData.MyData
 import com.myexample.viewModel.MyViewModel
 
 /*
@@ -36,7 +35,7 @@ fun MyRoomTest(
                     Column() {
                         Text(text = item.id.toString())
                         Text(text = item.date)
-                        Text(text = item.message)
+                        Text(text = item.detail)
                     }
                     Button(onClick = {
                         item.id?.let { viewModel.deleteById(it) }

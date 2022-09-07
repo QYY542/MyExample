@@ -1,4 +1,4 @@
-package com.myexample.data
+package com.myexample.data.MyData
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -19,7 +19,7 @@ interface MyDataDao {
     @Query("DELETE FROM details")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM details where id = :id")
+    @Query("DELETE FROM details WHERE id = :id")
     suspend fun deleteById(id: Int)
 
     @Update

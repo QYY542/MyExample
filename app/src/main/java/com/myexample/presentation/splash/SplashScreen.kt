@@ -24,7 +24,8 @@ fun SplashScreen(
     navController: NavController,
     viewModel: MyViewModel
 ) {
-    viewModel.navController_Number.value = 0
+//    viewModel.navController_Number.value = 0
+    viewModel.setNavControllerNumber(0)
     var coroutineScope = rememberCoroutineScope()
 
     Box(Modifier.fillMaxSize()) {

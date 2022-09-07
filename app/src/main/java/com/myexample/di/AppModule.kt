@@ -3,7 +3,7 @@ package com.myexample.di
 import android.content.Context
 import androidx.room.Room
 import com.myexample.data.AppDatabase
-import com.myexample.data.MyDataDao
+import com.myexample.data.MyData.MyDataDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

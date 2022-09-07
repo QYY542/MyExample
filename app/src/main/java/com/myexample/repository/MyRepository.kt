@@ -1,7 +1,7 @@
 package com.myexample.repository
 
-import com.myexample.data.MyData
-import com.myexample.data.MyDataDao
+import com.myexample.data.MyData.MyData
+import com.myexample.data.MyData.MyDataDao
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

@@ -15,7 +15,7 @@ fun DiaryScreen(
     navController: NavController,
     viewModel: MyViewModel
 ) {
-    viewModel.setNavControllerNumber(2)
+    viewModel.setNavControllerNumber(3)
     Text(text = "Diary")
 }
 
