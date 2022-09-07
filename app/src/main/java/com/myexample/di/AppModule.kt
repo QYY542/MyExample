@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.myexample.data.AppDatabase
 import com.myexample.data.MyData.MyDataDao
+import com.myexample.data.MyDiary.MyDiaryDao
+import com.myexample.data.MyTarget.MyTargetDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +32,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDao(database: AppDatabase): MyDataDao = database.getMyDataDao()
+    fun provideMyDataDao(database: AppDatabase): MyDataDao = database.getMyDataDao()
+
+    @Singleton
+    @Provides
+    fun provideMyDiaryDao(database: AppDatabase): MyDiaryDao = database.getMyDiaryDao()
+
+    @Singleton
+    @Provides
+    fun provideMyTargetDao(database: AppDatabase): MyTargetDao = database.getMyTargetDao()
 }

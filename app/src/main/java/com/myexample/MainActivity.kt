@@ -9,7 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import com.myexample.presentation.MyScreen
 import com.myexample.ui.theme.MyExampleTheme
-import com.myexample.viewModel.MyViewModel
+import com.myexample.presentation.note.MyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

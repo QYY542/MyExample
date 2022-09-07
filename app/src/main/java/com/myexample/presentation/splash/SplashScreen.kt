@@ -8,9 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import com.myexample.viewModel.MyViewModel
+import com.myexample.presentation.note.MyViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

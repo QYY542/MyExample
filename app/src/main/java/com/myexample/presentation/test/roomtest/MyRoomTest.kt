@@ -12,7 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.myexample.data.MyData.MyData
-import com.myexample.viewModel.MyViewModel
+import com.myexample.presentation.note.MyViewModel
 
 /*
   **Created by 24606 at 16:56 2022.

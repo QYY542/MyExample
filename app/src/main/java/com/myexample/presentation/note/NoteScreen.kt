@@ -24,7 +24,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.myexample.data.MyData.MyData
-import com.myexample.viewModel.MyViewModel
 
 /*
   **Created by 24606 at 23:37 2022.

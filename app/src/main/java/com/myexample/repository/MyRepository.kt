@@ -2,6 +2,10 @@ package com.myexample.repository
 
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyData.MyDataDao
+import com.myexample.data.MyDiary.MyDiary
+import com.myexample.data.MyDiary.MyDiaryDao
+import com.myexample.data.MyTarget.MyTarget
+import com.myexample.data.MyTarget.MyTargetDao
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -12,8 +16,11 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class MyRepository @Inject constructor(
-    private val myDataDao: MyDataDao
+    private val myDataDao: MyDataDao,
+    private val myDiaryDao: MyDiaryDao,
+    private val myTargetDao: MyTargetDao
 ) {
+    //MyData
     fun getAllData(): Flow<List<MyData>> = myDataDao.getAll()
 
     suspend fun insert(myData: MyData?) {
@@ -33,6 +40,52 @@ class MyRepository @Inject constructor(
     suspend fun update(myData: MyData?) {
         if (myData != null) {
             myDataDao.update(myData)
+        }
+    }
+
+    //MyDiray
+    fun getAllDataDiray(): Flow<List<MyDiary>> = myDiaryDao.getAll()
+
+    suspend fun insertDiray(myDiary: MyDiary?) {
+        if (myDiary != null) {
+            myDiaryDao.insert(myDiary)
+        }
+    }
+
+    suspend fun deleteAllDiray() {
+        myDiaryDao.deleteAll()
+    }
+
+    suspend fun deleteByIdDiray(id: Int) {
+        myDiaryDao.deleteById(id)
+    }
+
+    suspend fun updateDiray(myDiary: MyDiary?) {
+        if (myDiary != null) {
+            myDiaryDao.update(myDiary)
+        }
+    }
+
+    //MyTarget
+    fun getAllDataTarget(): Flow<List<MyTarget>> = myTargetDao.getAll()
+
+    suspend fun insertTarget(myTarget: MyTarget?) {
+        if (myTarget != null) {
+            myTargetDao.insert(myTarget)
+        }
+    }
+
+    suspend fun deleteAllTarget() {
+        myTargetDao.deleteAll()
+    }
+
+    suspend fun deleteByIdTarget(id: Int) {
+        myTargetDao.deleteById(id)
+    }
+
+    suspend fun updateTarget(myTarget: MyTarget?) {
+        if (myTarget != null) {
+            myTargetDao.update(myTarget)
         }
     }
 

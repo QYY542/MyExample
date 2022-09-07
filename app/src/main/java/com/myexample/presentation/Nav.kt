@@ -1,7 +1,6 @@
 package com.myexample.presentation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,7 +9,7 @@ import com.myexample.presentation.diary.DiaryScreen
 import com.myexample.presentation.note.NoteScreen
 import com.myexample.presentation.splash.SplashScreen
 import com.myexample.presentation.target.TargetScreen
-import com.myexample.viewModel.MyViewModel
+import com.myexample.presentation.note.MyViewModel
 
 /*
   **Created by 24606 at 23:39 2022.

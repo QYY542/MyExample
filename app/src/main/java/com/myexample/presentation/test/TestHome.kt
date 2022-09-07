@@ -2,7 +2,7 @@ package com.myexample.presentation.test
 
 import androidx.compose.runtime.*
 import com.myexample.presentation.test.inputting_taskbar.inputting
-import com.myexample.viewModel.MyViewModel
+import com.myexample.presentation.note.MyViewModel
 
 /*
   **Created by 24606 at 16:42 2022.

@@ -25,7 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.myexample.data.MyData.MyData
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
-import com.myexample.viewModel.MyViewModel
+import com.myexample.presentation.note.MyViewModel
 import kotlinx.coroutines.launch
 
 /*
