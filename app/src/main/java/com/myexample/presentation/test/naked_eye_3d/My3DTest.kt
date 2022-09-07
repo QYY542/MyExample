@@ -9,10 +9,12 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getSystemService
 import com.myexample.R
@@ -48,10 +50,12 @@ fun My3DTest(
     var y by remember { mutableStateOf(0f) }
     var z by remember { mutableStateOf(0f) }
 
-    var maxOffset by remember { mutableStateOf(100f) }
+    var maxOffset by remember { mutableStateOf(150f) }
     var dT by remember { mutableStateOf(2f) }
-    var mMaxAnular by remember { mutableStateOf(100f) }
+    var mMaxAnular by remember { mutableStateOf(150f) }
 
+    var w = 0
+    var h = 0
 
     sensorManager?.registerListener(object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
@@ -101,16 +105,19 @@ fun My3DTest(
         modifier = Modifier
             .fillMaxSize()
             .size(10.dp)
-
+            .scale(1.3f)
     ) {
+        h = size.height.toInt()
+        w = size.width.toInt()
+
         translate(-xDistance, -yDistance) {
-            drawImage(imageBack)
+            drawImage(imageBack, dstSize = IntSize(w, h))
         }
 
-        drawImage(imageMid)
+        drawImage(imageMid, dstSize = IntSize(w, h))
 
         translate(xDistance, yDistance) {
-            drawImage(imageFore)
+            drawImage(imageFore, dstSize = IntSize(w, h))
         }
 
     }

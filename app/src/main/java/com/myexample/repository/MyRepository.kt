@@ -21,7 +21,12 @@ class MyRepository @Inject constructor(
     private val myTargetDao: MyTargetDao
 ) {
     //MyData
-    fun getAllData(): Flow<List<MyData>> = myDataDao.getAll()
+    fun getAllData(complete: Boolean, date: String, importance: Boolean): Flow<List<MyData>> =
+        myDataDao.getAll(complete, date, importance)
+
+
+    fun getAllDataCompleted(complete: Boolean, date: String): Flow<List<MyData>> =
+        myDataDao.getAllCompleted(complete, date)
 
     suspend fun insert(myData: MyData?) {
         if (myData != null) {

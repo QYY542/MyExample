@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import com.myexample.presentation.MyScreen
 import com.myexample.presentation.ui.theme.MyExampleTheme
 import com.myexample.presentation.note.MyViewModel
+import com.myexample.presentation.test.TestHome
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -26,6 +26,7 @@ import com.myexample.data.MyData.MyData
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
 import com.myexample.presentation.note.MyViewModel
+import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
 
 /*
@@ -373,7 +374,7 @@ fun MyScreen(
             Card(
                 Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .height(200.dp)
+                    .height(400.dp)
                     .width(200.dp)
                     .align(Alignment.Center),
                 elevation = 3.dp,
@@ -385,32 +386,74 @@ fun MyScreen(
                         .scrollable(rememberScrollState(), orientation = Orientation.Vertical),
                     verticalArrangement = Arrangement.Bottom
                 ) {
-                    val title by viewModel.title
-                    val detail by viewModel.detail
+                    //数据
+                    var id by viewModel.id
+                    var title by viewModel.title
+                    var detail by viewModel.detail
+                    var importance by viewModel.importance
+                    var complete by viewModel.complete
+                    var date by viewModel.date
 
-                    TextField(value = title, onValueChange = {
-                        viewModel.setTitle(it)
+
+                    TextField(value = id, label = {
+                        Text(text = "id")
+                    }, onValueChange = {
+                        id = it
                     })
-                    TextField(value = detail, onValueChange = {
-                        viewModel.setDetail(it)
+                    TextField(value = title, label = {
+                        Text(text = "title")
+                    }, onValueChange = {
+                        title = it
                     })
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+                    TextField(value = detail, label = {
+                        Text(text = "detail")
+                    }, onValueChange = {
+                        detail = it
+                    })
+                    TextField(value = importance, label = {
+                        Text(text = "importance")
+                    }, onValueChange = {
+                        importance = it
+                    })
+                    TextField(value = complete, label = {
+                        Text(text = "complete")
+                    }, onValueChange = {
+                        complete = it
+                    })
+                    TextField(value = date, label = {
+                        Text(text = "date")
+                    }, onValueChange = {
+                        date = it
+                    })
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
                         //Button_OK
                         Button(onClick = {
-                            val myData = MyData(title = title, detail = detail)
+                            if (date.equals("")) {
+                                date = currentTime.formatTime()
+                            }
+                            val myData = MyData(
+                                title = title,
+                                detail = detail,
+                                importance = importance.toBoolean(),
+                                complete = complete.toBoolean(),
+                                date = date
+                            )
                             if (!title.equals("")) {
                                 viewModel.insert(myData)
                             }
-                            viewModel.setTitle("")
-                            viewModel.setDetail("")
+                            title = ""
+                            detail = ""
                             ifAddNewMission = !ifAddNewMission
                         }) {
                             Text(text = "好了")
                         }
                         //Button_Cancel
                         Button(onClick = {
-                            viewModel.setTitle("")
-                            viewModel.setDetail("")
+                            title = ""
+                            detail = ""
                             ifAddNewMission = !ifAddNewMission
                         }) {
                             Text(text = "不要")
@@ -423,5 +466,5 @@ fun MyScreen(
         }
 
     }
-
 }
+

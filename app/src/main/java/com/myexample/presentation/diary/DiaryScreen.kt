@@ -27,7 +27,6 @@ import com.google.accompanist.pager.rememberPagerState
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.note.NoteHome
-import com.myexample.presentation.note.NoteInfo
 import com.myexample.utils.vibrate
 import com.myexample.utils.vibrate_2
 import kotlinx.coroutines.launch
@@ -93,7 +92,7 @@ fun DirayHome(
                     .pointerInput(Unit) {
                         detectVerticalDragGestures(
                             onVerticalDrag = { change, dragAmount ->
-                                change.consumeAllChanges()
+                                change.consume()
                                 if (dragAmount > 10) {
                                     ifChange = -1
                                 } else if (dragAmount < -10) {
@@ -126,7 +125,7 @@ fun DirayHome(
                             .fillParentMaxWidth()
                             .fillParentMaxHeight(0.9f)
                             .padding(10.dp, 5.dp)
-                            .clip(RoundedCornerShape(18.dp)),
+                            .clip(RoundedCornerShape(30.dp)),
                         elevation = 6.dp,
                         backgroundColor = Color.Gray
                     ) {
@@ -137,14 +136,10 @@ fun DirayHome(
                                 Text(text = item.detail)
                             }
                         }
-
                     }
-
-
                 }
             }
         }
-
     }
 }
 

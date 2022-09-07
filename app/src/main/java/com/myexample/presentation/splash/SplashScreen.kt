@@ -34,6 +34,7 @@ fun SplashScreen(
     coroutineScope.launch {
         delay(1000)
         navController.navigate("note_screen")
+        navController.enableOnBackPressed(false)
     }
 }
 

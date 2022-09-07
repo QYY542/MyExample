@@ -14,10 +14,9 @@ data class MyData(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id", typeAffinity = ColumnInfo.INTEGER)
     val id: Int? = null,
-    val title: String = "",
-    val detail: String = "",
-    val importance: Int = 0,
-    val complete: Boolean = false,
-    val date: String = "2021/1/1"
-
+    var title: String = "",
+    var detail: String = "",
+    var importance: Boolean = false,
+    var complete: Boolean = false,
+    var date: String = "2022-1-1"
 )

@@ -63,7 +63,6 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
-
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.7"
@@ -103,8 +102,8 @@ dependencies {
     implementation "com.airbnb.android:lottie-compose:5.2.0"
 
     // page
-    implementation "com.google.accompanist:accompanist-pager:0.24.11-rc"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.24.11-rc"
+    implementation "com.google.accompanist:accompanist-pager:0.25.0"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.25.0"
     implementation "com.google.accompanist:accompanist-swiperefresh:0.24.6-alpha"
 
     // 状态栏
