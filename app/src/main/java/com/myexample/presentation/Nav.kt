@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import com.myexample.presentation.diary.DiaryScreen
 import com.myexample.presentation.note.NoteScreen
 import com.myexample.presentation.splash.SplashScreen
-import com.myexample.presentation.target.TargetScreen
+import com.myexample.presentation.ttarget.TargetScreen
 import com.myexample.presentation.note.MyViewModel
 
 /*
