@@ -1,11 +1,17 @@
 package com.myexample.presentation
 
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.runtime.*
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.myexample.presentation.diary.DiaryDetail
 import com.myexample.presentation.diary.DiaryScreen
+import com.myexample.presentation.diary.DirayViewModel
 import com.myexample.presentation.note.NoteScreen
 import com.myexample.presentation.splash.SplashScreen
 import com.myexample.presentation.ttarget.TargetScreen
@@ -36,5 +42,18 @@ fun Nav(
         composable("target_screen") {
             TargetScreen(navController, viewModel)
         }
+        composable(
+            route = "diary_detail/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val diaryViewModel = hiltViewModel<DirayViewModel>()
+            var id by remember {
+
+                mutableStateOf(1)
+            }
+            backStackEntry.arguments?.getInt("id")?.let {id = it }
+            DiaryDetail(id = id,navController= navController)
+        }
+
     }
 }

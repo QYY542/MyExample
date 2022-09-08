@@ -13,7 +13,8 @@ data class MyDiary(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id", typeAffinity = ColumnInfo.INTEGER)
     val id: Int? = null,
-    val title: String = "",
-    val detail: String = "",
-    val date: String = "2021/1/1"
+    var title: String = "",
+    var detail: String = "",
+    var date: String = "2021-1-1",
+    var dateDetail:String = "9月9日，2022 15:20"
 )

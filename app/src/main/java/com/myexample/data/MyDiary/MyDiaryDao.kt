@@ -14,6 +14,9 @@ interface MyDiaryDao {
     @Query("SELECT * FROM diary")
     fun getAll(): Flow<List<MyDiary>>
 
+    @Query("SELECT * FROM diary WHERE id = :id")
+    fun getById(id:Int): Flow<MyDiary>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(myDiary: MyDiary)
 

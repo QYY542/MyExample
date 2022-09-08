@@ -48,6 +48,8 @@ class MyRepository @Inject constructor(
     //MyDiray
     fun getAllDataDiray(): Flow<List<MyDiary>> = myDiaryDao.getAll()
 
+    fun getByIdDiary(id: Int): Flow<MyDiary> = myDiaryDao.getById(id)
+
     suspend fun insertDiray(myDiary: MyDiary?) {
         if (myDiary != null) {
             myDiaryDao.insert(myDiary)

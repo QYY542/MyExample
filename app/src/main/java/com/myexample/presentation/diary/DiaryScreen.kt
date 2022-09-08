@@ -1,5 +1,8 @@
 package com.myexample.presentation.diary
 
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
@@ -9,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material3.BottomAppBarDefaults.FloatingActionButtonElevation.elevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -51,17 +55,20 @@ fun DiaryScreen(
         count = 2
     ) { page ->
         when (page) {
-            0 -> DirayHome()
+            0 -> DirayHome(navController)
             1 -> DiaryInfo()
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DirayHome(
+    navController: NavController,
     dirayViewModel: DirayViewModel = hiltViewModel()
 ) {
     val state by dirayViewModel.state.collectAsState()
+
     Column(Modifier.fillMaxSize()) {
         Button(onClick = {
             val myDiary = MyDiary()
@@ -72,70 +79,39 @@ fun DirayHome(
 
 
         val listState = rememberLazyListState()
-        var ItemIndex by remember {
-            mutableStateOf(0)
-        }
-        var ifChange = 0
 
-        var ifNextColumn by remember {
-            mutableStateOf(0)
-        }
-        LaunchedEffect(key1 = ItemIndex) {
-            listState.animateScrollToItem(index = ItemIndex)
-        }
-        var context = LocalContext.current
         Column(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
                 state = listState,
-                userScrollEnabled = false,
-                modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectVerticalDragGestures(
-                            onVerticalDrag = { change, dragAmount ->
-                                change.consume()
-                                if (dragAmount > 10) {
-                                    ifChange = -1
-                                } else if (dragAmount < -10) {
-                                    ifChange = 1
-                                }
-                            },
-                            onDragEnd = {
-                                //上下滑动
-                                if (ifChange != 0) {
-                                    ItemIndex += ifChange
-                                    if (ItemIndex <= 0) {
-                                        ItemIndex = 0
-                                        vibrate_2(context)
-                                    }
-                                    if (ItemIndex >= state.size - 1) {
-                                        ItemIndex = state.size - 1
-                                    }
-                                    vibrate(context)
-                                    ifChange = 0
-                                }
-                            }
-                        )
-                    }
             ) {
                 itemsIndexed(state) { index, item ->
-
-
                     Card(
                         Modifier
                             .fillParentMaxWidth()
-                            .fillParentMaxHeight(0.9f)
+                            .height(150.dp)
                             .padding(10.dp, 5.dp)
-                            .clip(RoundedCornerShape(30.dp)),
+                            .clip(RoundedCornerShape(20.dp))
+                            .combinedClickable(
+                                onClick = {
+                                    navController.navigate("diary_detail/${item.id}")
+//                                    Log.d("++",item.id.toString())
+                                },
+                                onLongClick = {
+
+                                }
+                            ),
                         elevation = 6.dp,
                         backgroundColor = Color.Gray
                     ) {
-                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+
                             Column(Modifier.padding(10.dp, 8.dp)) {
-                                Text(text = "${item.id}")
                                 Text(text = item.title)
                                 Text(text = item.detail)
+                                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                                    Text(text = item.dateDetail)
+                                }
                             }
-                        }
+
                     }
                 }
             }

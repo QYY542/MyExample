@@ -1,11 +1,13 @@
 package com.myexample.presentation.diary
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.repository.MyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -29,6 +31,13 @@ class DirayViewModel @Inject constructor(
                     _state.value = it
                 }
         }
+    }
+
+    private val _stateById = MutableStateFlow<MyDiary>(MyDiary())
+    val stateById: StateFlow<MyDiary> = _stateById
+
+    fun getById(idd:Int): Flow<MyDiary> {
+      return  myRepository.getByIdDiary(idd)
     }
 
     fun insert(myDiary: MyDiary?) {
@@ -64,4 +73,13 @@ class DirayViewModel @Inject constructor(
             getAllData()
         }
     }
+
+    //
+    var id = mutableStateOf(0)
+
+    var title = mutableStateOf("")
+
+    var detail = mutableStateOf("")
+
+    var date = mutableStateOf("")
 }

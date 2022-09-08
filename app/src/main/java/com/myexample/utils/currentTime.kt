@@ -51,12 +51,23 @@ object currentTime {
     }
 
     fun formatTime(): String {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
         val time =
-            "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH) + 1}-${
-                calendar.get(
-                    Calendar.DAY_OF_MONTH
-                )
-            }"
+            "${year}-${month}-${day}"
+        return time
+    }
+
+    fun formatTimeDetail():String{
+        "9月9日，2022 15:20"
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+        val time =
+            "${month}月${day}日,${year} ${hour}:${minute}"
         return time
     }
 
