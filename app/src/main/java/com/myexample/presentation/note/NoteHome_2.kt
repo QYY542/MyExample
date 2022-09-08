@@ -12,8 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.myexample.utils.constant
 import com.myexample.utils.currentTime
 
 /*
@@ -26,15 +26,28 @@ import com.myexample.utils.currentTime
 fun NoteHome_2(
     viewModel: MyViewModel
 ) {
-    var selectDate by remember {
-        mutableStateOf(currentTime.otherday(-1))
-    }
-    viewModel.get_2(selectDate)
-    val state by viewModel.state_2.collectAsState()
-    val stateNormal by viewModel.stateNormal_2.collectAsState()
-    val stateCompleted by viewModel.stateCompleted_2.collectAsState()
+    val state by viewModel.state.collectAsState()
+    val refresh by viewModel.refresh.collectAsState()
     var showDataPicker by remember {
         mutableStateOf(false)
+    }
+
+
+    var taskToDo = state.filter {
+        !it.complete && it.date == constant.selectTime
+    }
+    var taskCompleted = state.filter {
+        it.complete && it.date == constant.selectTime
+    }
+
+
+    LaunchedEffect(key1 = refresh){
+        taskToDo = state.filter {
+            !it.complete && it.date == constant.selectTime
+        }
+        taskCompleted = state.filter {
+            it.complete && it.date == constant.selectTime
+        }
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -59,21 +72,10 @@ fun NoteHome_2(
                 stickyHeader {
                     Text(text = "未完成")
                 }
-                itemsIndexed(state) { index, item ->
+                itemsIndexed(taskToDo) { index, item ->
                     NoteCard(
                         item = item,
                         complete = true,
-                        importance = true,
-                        homeScreen = false,
-                        viewModel = viewModel
-                    )
-                }
-
-                itemsIndexed(stateNormal) { index, item ->
-                    NoteCard(
-                        item = item,
-                        complete = true,
-                        importance = false,
                         homeScreen = false,
                         viewModel = viewModel
                     )
@@ -83,11 +85,10 @@ fun NoteHome_2(
                     Text(text = "已完成")
                 }
 
-                itemsIndexed(stateCompleted) { index, item ->
+                itemsIndexed(taskCompleted) { index, item ->
                     NoteCard(
                         item = item,
                         complete = false,
-                        importance = true,
                         homeScreen = false,
                         viewModel = viewModel
                     )
@@ -101,9 +102,9 @@ fun NoteHome_2(
                         month = currentTime.month(),
                         day = currentTime.day()
                     ) { selected, year, month, day ->
-                        val text1 = "$year-$month-$day"
-                        selectDate = text1
-                        viewModel.get_2(selectDate)
+                        val selectTime = "$year-$month-$day"
+                        constant.selectTime = selectTime
+                        viewModel.onRefresh()
                         showDataPicker = !showDataPicker
                     }
                 }

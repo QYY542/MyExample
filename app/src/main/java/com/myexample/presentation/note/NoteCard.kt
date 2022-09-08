@@ -33,7 +33,6 @@ import com.myexample.utils.vibrate_2
 fun NoteCard(
     item: MyData,
     complete: Boolean,
-    importance: Boolean,
     homeScreen: Boolean,
     viewModel: MyViewModel
 ) {
@@ -86,7 +85,6 @@ fun NoteCard(
                         val myData = item
                         myData.date = currentTime.formatTime()
                         viewModel.update(myData)
-
                     }) {
                         Text(text = "2")
                     }

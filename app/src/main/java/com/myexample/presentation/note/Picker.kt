@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
@@ -411,15 +412,20 @@ fun DatePicker(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(top = 4.dp),
+            .padding(top = 4.dp)
+            .background(Color.White)
+            .clip(RoundedCornerShape(10.dp))
+        ,
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = title)
-            Button(onClick = { onDismiss(true, selectYear, selectMonth, selectDay.value) }) {
-                Text(text = "确定")
-            }
-            Button(onClick = { onDismiss(false, 0, 0, 0) }) {
-                Text(text = "取消")
+            Row() {
+                Button(onClick = { onDismiss(true, selectYear, selectMonth, selectDay.value) }) {
+                    Text(text = "确定")
+                }
+                Button(onClick = { onDismiss(false, 0, 0, 0) }) {
+                    Text(text = "取消")
+                }
             }
         }
 //        { onDismiss(false, 0, 0, 0) }

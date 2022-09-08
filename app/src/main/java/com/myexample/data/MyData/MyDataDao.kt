@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MyDataDao {
-    @Query("SELECT * FROM details WHERE complete = :complete AND date = :date AND importance = :importance")
-    fun getAll(complete: Boolean, date: String, importance: Boolean): Flow<List<MyData>>
+    @Query("SELECT * FROM details")
+    fun getAll(): Flow<List<MyData>>
 
-    @Query("SELECT * FROM details WHERE complete = :complete AND date = :date")
-    fun getAllCompleted(complete: Boolean, date: String): Flow<List<MyData>>
+    @Query("SELECT * FROM details WHERE title = :title")
+    fun getByTitle(title:String): Flow<List<MyData>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(myData: MyData)
