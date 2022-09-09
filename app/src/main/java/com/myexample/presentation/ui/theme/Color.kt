@@ -24,3 +24,5 @@ val Purple = Color(0xFF6F4CAD)
 
 val Gray = Color(0xFF7E7979)
 val LightGray = Color(0xFFECECEC)
+
+val ColorBACK = Color(255, 255, 255)

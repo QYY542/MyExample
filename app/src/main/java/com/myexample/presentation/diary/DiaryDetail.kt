@@ -1,6 +1,7 @@
 package com.myexample.presentation.diary
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,7 +53,6 @@ fun DiaryDetail(
     sheetState: ModalBottomSheetState,
     diaryViewModel: DirayViewModel = hiltViewModel()
 ) {
-    navController.enableOnBackPressed(true)
 //    val state by diaryViewModel.getById(id).collectAsState(MyDiary())
     diaryViewModel.getById(1)
     val state by diaryViewModel.state.collectAsState()
@@ -90,12 +90,21 @@ fun DiaryDetail(
     }
 
 
-    LaunchedEffect(key1 = constant.selectId) {
-        id = item.id
-        title = item.title
-        detail = item.detail
-        date = item.date
-        mood = item.mood
+    LaunchedEffect(key1 = constant.selectId, key2 = constant.onAddButton) {
+        if (constant.onAddButton) {
+            item = MyDiary()
+            id = item.id
+            title = item.title
+            detail = item.detail
+            date = item.date
+            mood = item.mood
+        } else {
+            id = item.id
+            title = item.title
+            detail = item.detail
+            date = item.date
+            mood = item.mood
+        }
     }
 
 
@@ -130,8 +139,7 @@ fun DiaryDetail(
                     if (!title.equals("")) {
                         diaryViewModel.insert(myDiary)
                     }
-//                    title = ""
-//                    detail = ""
+
                     coroutineScope.launch {
                         sheetState.hide()
                     }
@@ -166,7 +174,7 @@ fun DiaryDetail(
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
             },
-            label = { Text("标题", style = MaterialTheme.typography.titleLarge) },
+            label = { Text("Title", style = MaterialTheme.typography.titleLarge) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -187,7 +195,7 @@ fun DiaryDetail(
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
             },
-            label = { Text("内容", style = MaterialTheme.typography.titleMedium) },
+            label = { Text("Content", style = MaterialTheme.typography.titleMedium) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -197,9 +205,10 @@ fun DiaryDetail(
             modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(25.dp)
         )
+
+
     }
 }
-
 
 @Composable
 fun EntryMoodSection(

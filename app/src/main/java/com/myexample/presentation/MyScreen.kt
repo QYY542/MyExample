@@ -2,6 +2,7 @@ package com.myexample.presentation
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -30,6 +32,10 @@ import com.myexample.data.MyData.MyData
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
 import com.myexample.presentation.note.MyViewModel
+import com.myexample.presentation.ui.theme.ColorBACK
+import com.myexample.utils.constant
+import com.myexample.utils.constant.inSheet
+import com.myexample.utils.constant.isChange
 import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
 
@@ -171,17 +177,46 @@ fun MyScreen(
         mutableStateOf(MyData())
     }
 
+    var inSheet by remember {
+        mutableStateOf(false)
+    }
+    val focusManager = LocalFocusManager.current
     LaunchedEffect(key1 = sheetState.isVisible) {
         if (!sheetState.isVisible) {
             kc?.hide()
+            inSheet = false
+            focusManager.clearFocus()
+        } else {
+            inSheet = true
         }
     }
+
+    BackHandler(enabled = inSheet) {
+        coroutineScope.launch {
+            sheetState.animateTo(ModalBottomSheetValue.Hidden)
+            sheetState.hide()
+        }
+        inSheet = false
+    }
+
+//    LaunchedEffect(key1 = inSheet) {
+//        if (!inSheet) {
+////            sheetState.animateTo(ModalBottomSheetValue.Hidden)
+////            sheetState.hide()
+////            isChange = false
+//            println("$inSheet")
+//        } else {
+//            println("$inSheet")
+//        }
+//        println("====================================")
+//    }
     ////////////////////////////////////
     Box() {
         /**
          * 右下角的按钮
          */
         Scaffold(
+            backgroundColor = ColorBACK,
             topBar = {
 //            Row(horizontalArrangement=Arrangement.SpaceBetween, modifier = Modifier.height(30.dp)) {
 //                Spacer(modifier = Modifier.width(20.dp))
@@ -249,6 +284,8 @@ fun MyScreen(
                         onClick = {
 //                            ifAddNewMission = !ifAddNewMission
                             item = MyData()
+                            constant.onAddButton = true
+
                             coroutineScope.launch {
                                 if (sheetState.isVisible) {
                                     sheetState.animateTo(ModalBottomSheetValue.Hidden)

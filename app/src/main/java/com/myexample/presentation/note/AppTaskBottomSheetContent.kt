@@ -10,26 +10,36 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.*
 import androidx.compose.material.*
 import androidx.compose.material.ContentAlpha.high
 import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.InputMode.Companion.Keyboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -41,10 +51,13 @@ import com.myexample.data.MyData.MyData
 import com.myexample.presentation.diary.DiaryDetail
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.note.Status
+import com.myexample.presentation.test.CursorSelectionBehaviour
 import com.myexample.presentation.ui.theme.Green
 import com.myexample.presentation.ui.theme.Orange
 import com.myexample.presentation.ui.theme.Red
+import com.myexample.utils.constant
 import com.myexample.utils.currentTime
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.internal.concurrent.Task
 import java.util.*
@@ -93,6 +106,12 @@ fun AddTaskBottomSheetContentNote(
     var detail by remember {
         mutableStateOf("")
     }
+    var detail_2 by remember {
+        val selection = TextRange(detail.length)
+        val textFieldValue = TextFieldValue(text = detail, selection = selection)
+        mutableStateOf(textFieldValue)
+    }
+
     var importance by remember {
         mutableStateOf(false)
     }
@@ -100,16 +119,29 @@ fun AddTaskBottomSheetContentNote(
         mutableStateOf(false)
     }
     var date by remember {
-        mutableStateOf("2022-9-9")
+        mutableStateOf("")
     }
 
-    LaunchedEffect(key1 = item) {
-        id = item.id
-        title = item.title
-        detail = item.detail
-        title = item.title
-        importance = item.importance
-        complete = item.complete
+    LaunchedEffect(key1 = item, key2 = constant.onAddButton) {
+        if (constant.onAddButton) {
+            val item = MyData()
+            id = item.id
+            title = item.title
+            detail = "●"
+            importance = item.importance
+            complete = item.complete
+        } else {
+            id = item.id
+            title = item.title
+            if (item.detail == "") {
+                detail = "●"
+            } else {
+                detail = item.detail
+            }
+            importance = item.importance
+            complete = item.complete
+        }
+        detail_2 = TextFieldValue(text = detail, selection = TextRange(detail.length))
     }
 
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
@@ -122,6 +154,10 @@ fun AddTaskBottomSheetContentNote(
             .padding(horizontal = 16.dp, vertical = 24.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        val focusRequester = remember { FocusRequester() }
+        val focusManager = LocalFocusManager.current
+
+
         SheetHandle(Modifier.align(Alignment.CenterHorizontally))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
@@ -132,8 +168,12 @@ fun AddTaskBottomSheetContentNote(
             )
             Button(
                 onClick = {
+                    focusManager.clearFocus()
                     if (date.equals("")) {
                         date = currentTime.formatTime()
+                    }
+                    if (detail.equals("●")) {
+                        detail = ""
                     }
                     val myData = MyData(
                         id = id,
@@ -164,24 +204,83 @@ fun AddTaskBottomSheetContentNote(
         //数据
 
 
+//        OutlinedTextField(
+//            value = title,
+//            onValueChange = { title = it },
+//            label = { Text(text = "title") },
+//            shape = RoundedCornerShape(15.dp),
+//            textStyle = TextStyle(fontSize = 18.sp),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//        )
+//        OutlinedTextField(
+//            value = detail,
+//            onValueChange = { detail = it },
+//            label = { Text(text = "detail") },
+//            shape = RoundedCornerShape(15.dp),
+//            textStyle = TextStyle(fontSize = 15.sp),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(150.dp)
+//        )
+
         OutlinedTextField(
             value = title,
-            onValueChange = { title = it },
-            label = { Text(text = "title") },
-            shape = RoundedCornerShape(15.dp),
-            textStyle = TextStyle(fontSize = 18.sp),
+            onValueChange = {
+                title = it
+            },
+            label = {
+                androidx.compose.material3.Text(
+                    "Title",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary
+            ),
+            textStyle = MaterialTheme.typography.titleMedium,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize(),
+            shape = RoundedCornerShape(25.dp),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
+
+
         OutlinedTextField(
-            value = detail,
-            onValueChange = { detail = it },
-            label = { Text(text = "detail") },
-            shape = RoundedCornerShape(15.dp),
-            textStyle = TextStyle(fontSize = 15.sp),
+            value = detail_2,
+            onValueChange = {
+                detail_2 = it
+            },
+            label = {
+                androidx.compose.material3.Text(
+                    "Content",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary
+            ),
+            textStyle = MaterialTheme.typography.titleMedium,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
+                .fillMaxSize()
+                .focusRequester(focusRequester),
+            shape = RoundedCornerShape(25.dp),
+//            keyboardActions = KeyboardActions.Default
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+////            keyboardActions = KeyboardActions
+            keyboardActions = KeyboardActions(onDone = {
+//                detail_2.text += "\n●"
+                val text = detail_2.text + "\n●"
+                val selection = TextRange(text.length)
+                val textFieldValue =
+                    TextFieldValue(text = text, selection = selection)
+                detail_2 = textFieldValue
+
+            })
         )
         Spacer(Modifier.height(12.dp))
         PriorityTabRow(

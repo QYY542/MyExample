@@ -27,6 +27,7 @@ import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.presentation.ui.theme.Gray
 import com.myexample.presentation.ui.theme.Red
+import com.myexample.utils.constant
 import com.myexample.utils.currentTime
 import com.myexample.utils.vibrate
 import com.myexample.utils.vibrate_2
@@ -57,6 +58,7 @@ fun NoteCard(
                     onClick = {
                         onClick(MyData())
                         onClick(item)
+                        constant.onAddButton = false
                     },
                     onDoubleClick = {
                         vibrate_2(context)

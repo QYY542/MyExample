@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
 import com.myexample.R
 import com.myexample.data.MyData.MyData
+import com.myexample.presentation.ui.theme.ColorBACK
 import com.myexample.utils.constant
 import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
@@ -41,7 +42,7 @@ import kotlinx.coroutines.launch
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
     ExperimentalMaterialApi::class
 )
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NoteHome(
     viewModel: MyViewModel,
@@ -75,6 +76,7 @@ fun NoteHome(
 
 
     Scaffold(
+        backgroundColor = ColorBACK,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
@@ -119,22 +121,25 @@ fun NoteHome(
         Box(Modifier.fillMaxSize()) {
 
             Column(Modifier.fillMaxSize()) {
-                Spacer(modifier = Modifier.height(60.dp))
+//                Spacer(modifier = Modifier.height(60.dp))
                 LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(12.dp)
+//                    contentPadding = PaddingValues(12.dp)
                 ) {
                     stickyHeader {
-                        Column(
+                        Row(
                             Modifier
                                 .fillMaxWidth()
-                                .background(Color.White)
-                                .clickable {
-                                    showIncompleted = !showIncompleted
-                                }
+                                .background(ColorBACK)
+//                                .clickable {
+//                                    showIncompleted = !showIncompleted
+//                                }
                         ) {
+                            Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = "未完成",
+                                text = "in progress",
+                                fontFamily = FontFamily(Font(R.font.rubik_bold)),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                             )
@@ -144,7 +149,7 @@ fun NoteHome(
                     if (showIncompleted) {
                         itemsIndexed(taskToDo) { index, item ->
                             NoteCard(
-                                modifier = Modifier,
+                                modifier = Modifier.padding(12.dp, 0.dp),
                                 item = item,
                                 complete = true,
                                 homeScreen = true,
@@ -158,16 +163,18 @@ fun NoteHome(
 
 
                     stickyHeader {
-                        Column(
+                        Row(
                             Modifier
                                 .fillMaxWidth()
-                                .background(Color(241, 244, 252))
-                                .clickable {
-                                    showCompleted = !showCompleted
-                                }
+                                .background(ColorBACK)
+//                                .clickable {
+//                                    showCompleted = !showCompleted
+//                                }
                         ) {
+                            Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = "已完成",
+                                text = "completed",
+                                fontFamily = FontFamily(Font(R.font.rubik_bold)),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                             )
@@ -178,7 +185,7 @@ fun NoteHome(
                     if (showCompleted) {
                         itemsIndexed(taskCompleted) { index, item ->
                             NoteCard(
-                                modifier = Modifier,
+                                modifier = Modifier.padding(12.dp, 0.dp),
                                 item = item,
                                 complete = false,
                                 homeScreen = true,

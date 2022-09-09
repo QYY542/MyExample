@@ -110,4 +110,20 @@ dependencies {
     implementation "com.google.accompanist:accompanist-insets:0.21.2-beta"
     implementation "com.google.accompanist:accompanist-insets-ui:0.21.2-beta"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.9-beta"
+
+    // Compose MarkDown
+//    implementation 'com.github.jeziellago:compose-markdown:0.3.0'
+
+    // Compose Glance (Widgets)
+    implementation "androidx.glance:glance-appwidget:1.0.0-alpha03"
+
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+//    // Accompanist libraries
+//    implementation "com.google.accompanist:accompanist-flowlayout:0.23.1"
+//    implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
+//    implementation "com.google.accompanist:accompanist-permissions:0.23.1"
+    
+
 }

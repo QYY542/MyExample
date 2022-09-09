@@ -133,6 +133,7 @@ fun DirayHome(
                                 modifier = Modifier
                                     .clickable {
                                         coroutineScope.launch {
+                                            constant.onAddButton = false
                                             dirayViewModel.id.value = item.id
                                             constant.selectId = item.id
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
