@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.myexample.data.MyData.MyData
 
 /*
   **Created by 24606 at 23:37 2022.
@@ -17,7 +18,8 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun NoteScreen(
     navController: NavController,
-    viewModel: MyViewModel
+    viewModel: MyViewModel,
+    onClick: (item: MyData) -> Unit
 ) {
     viewModel.setNavControllerNumber(1)
 
@@ -28,8 +30,12 @@ fun NoteScreen(
         count = 2
     ) { page ->
         when (page) {
-            0 -> NoteHome(viewModel)
-            1 -> NoteHome_2(viewModel)
+            0 -> NoteHome(viewModel, onClick = {
+                onClick(it)
+            })
+            1 -> NoteHome_2(viewModel, onClick = {
+                onClick(it)
+            })
         }
     }
 }

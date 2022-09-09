@@ -18,7 +18,7 @@ val DarkGray = Color(0xFF090909)
 //val SurfaceGray = Color(0xFF121212)
 val Red = Color(0xFFD53A2F)
 val Blue = Color(0xFF2965C9)
-val Green = Color(85,187,138)
+val Green = Color(0xFF1E9651)
 val Orange = Color(0xFFFF9800)
 val Purple = Color(0xFF6F4CAD)
 

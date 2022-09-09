@@ -30,7 +30,7 @@ class MyViewModel @Inject constructor(
     private val _refresh = MutableStateFlow<Int>(0)
     val refresh: StateFlow<Int> = _refresh
 
-    fun onRefresh(){
+    fun onRefresh() {
         _refresh.value++
     }
 
@@ -102,15 +102,15 @@ class MyViewModel @Inject constructor(
     }
 
     //数据
-    val id = mutableStateOf("")
+    val id = mutableStateOf(0)
 
     val title = mutableStateOf("")
 
     val detail = mutableStateOf("")
 
-    val importance = mutableStateOf("false")
+    val importance = mutableStateOf(false)
 
-    val complete = mutableStateOf("false")
+    val complete = mutableStateOf(false)
 
     val date = mutableStateOf("")
 

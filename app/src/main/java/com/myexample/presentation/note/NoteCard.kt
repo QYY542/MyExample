@@ -38,7 +38,8 @@ fun NoteCard(
     item: MyData,
     complete: Boolean,
     homeScreen: Boolean,
-    viewModel: MyViewModel
+    viewModel: MyViewModel,
+    onClick: (item: MyData) -> Unit
 ) {
     val context = LocalContext.current
     Card(
@@ -50,7 +51,7 @@ fun NoteCard(
             modifier = Modifier
                 .combinedClickable(
                     onClick = {
-
+                        onClick(item)
                     },
                     onDoubleClick = {
                         vibrate_2(context)
@@ -93,33 +94,6 @@ fun NoteCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-//                    IconButton(onClick = {
-//                        vibrate_2(context)
-//                        val myData = item
-//                        myData.complete = complete
-//                        if (myData.complete) {
-//                            myData.status = Status.COMPLETED
-//                        } else {
-//                            myData.status = Status.INCOMPLETED_GREEN
-//                        }
-//                        viewModel.update(myData)
-//                    }, modifier = Modifier.size(30.dp)) {
-//                        Icon(
-//                            painterResource(item.status.icon),
-//                            item.status.title,
-//                            tint = item.status.color,
-//                            modifier = Modifier.size(30.dp)
-//                        )
-//                    }
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        item.title,
-                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = {
                         vibrate_2(context)
                         val myData = item
@@ -130,13 +104,51 @@ fun NoteCard(
                             myData.status = Status.INCOMPLETED_GREEN
                         }
                         viewModel.update(myData)
+
                     }, modifier = Modifier.size(30.dp)) {
+
                         Icon(
                             painterResource(item.status.icon),
                             item.status.title,
                             tint = item.status.color,
                             modifier = Modifier.size(30.dp)
                         )
+
+                    }
+                    
+                    Spacer(Modifier.width(8.dp))
+
+                    Text(
+                        item.title,
+                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    IconButton(onClick = {
+                        vibrate_2(context)
+                        val myData = item
+                        myData.complete = complete
+                        if (myData.complete) {
+                            myData.status = Status.COMPLETED
+                        } else {
+                            myData.status = Status.INCOMPLETED_GREEN
+                        }
+                        viewModel.update(myData)
+
+                    }, modifier = Modifier.size(30.dp)) {
+
+                        Icon(
+                            painterResource(item.status.icon),
+                            item.status.title,
+                            tint = item.status.color,
+                            modifier = Modifier.size(30.dp)
+                        )
+
                     }
 
                 }

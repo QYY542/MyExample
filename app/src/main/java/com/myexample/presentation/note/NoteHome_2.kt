@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.myexample.data.MyData.MyData
 import com.myexample.utils.constant
 import com.myexample.utils.currentTime
 
@@ -24,7 +25,8 @@ import com.myexample.utils.currentTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NoteHome_2(
-    viewModel: MyViewModel
+    viewModel: MyViewModel,
+    onClick: (item: MyData) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val refresh by viewModel.refresh.collectAsState()
@@ -41,7 +43,7 @@ fun NoteHome_2(
     }
 
 
-    LaunchedEffect(key1 = refresh){
+    LaunchedEffect(key1 = refresh) {
         taskToDo = state.filter {
             !it.complete && it.date == constant.selectTime
         }
@@ -81,7 +83,8 @@ fun NoteHome_2(
                         item = item,
                         complete = true,
                         homeScreen = false,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        onClick = { onClick(it) },
                     )
                 }
 
@@ -95,7 +98,8 @@ fun NoteHome_2(
                         item = item,
                         complete = false,
                         homeScreen = false,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        onClick = { onClick(it) },
                     )
                 }
 

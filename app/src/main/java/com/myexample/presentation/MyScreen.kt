@@ -13,15 +13,19 @@ import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
 import com.myexample.data.MyData.MyData
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
@@ -37,7 +41,10 @@ val localX = 120.dp
 val localY = 60.dp
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun MyScreen(
     viewModel: MyViewModel
@@ -47,6 +54,7 @@ fun MyScreen(
     val navController = rememberNavController()
     val navController_Number by viewModel.navController_Number
     var coroutineScope = rememberCoroutineScope()
+    val kc = LocalSoftwareKeyboardController.current
     //语音动画
 //    var alpha by remember {
 //        mutableStateOf(0F)
@@ -156,8 +164,18 @@ fun MyScreen(
     var ifAddNewMission by remember {
         mutableStateOf(false)
     }
+    val sheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
+    var item by remember {
+        mutableStateOf(MyData())
+    }
 
+    LaunchedEffect(key1 = sheetState.isVisible) {
+        if (!sheetState.isVisible) {
+            kc?.hide()
+        }
+    }
     ////////////////////////////////////
     Box() {
         /**
@@ -229,7 +247,16 @@ fun MyScreen(
                     FloatingActionButton(
                         backgroundColor = Color(114, 137, 196),
                         onClick = {
-                            ifAddNewMission = !ifAddNewMission
+//                            ifAddNewMission = !ifAddNewMission
+                            item = MyData()
+                            coroutineScope.launch {
+                                if (sheetState.isVisible) {
+                                    sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                                } else {
+                                    sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                }
+
+                            }
                         },
                         modifier = Modifier
                             .size(animSize)
@@ -359,111 +386,131 @@ fun MyScreen(
             floatingActionButtonPosition = FabPosition.Center,
             isFloatingActionButtonDocked = true,
             bottomBar = {
-
-
             }
         ) {
-            // Screen content
-            Nav(navController, viewModel)
+
+            ModalBottomSheetLayout(
+                sheetState = sheetState,
+                sheetShape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
+                sheetContent = {
+                    AddTaskBottomSheetContent(
+                        sheetState = sheetState,
+                        viewModel = viewModel,
+                        item = item
+                    )
+                }) {
+                // Screen content
+                Nav(navController, viewModel, onClick = {
+                    item = it
+                    coroutineScope.launch {
+                        if (sheetState.isVisible) {
+                            sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                        } else {
+                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        }
+                    }
+
+                })
+            }
         }
 
         /**
          * 中间的卡片
          */
-        if (ifAddNewMission) {
-            Card(
-                Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .height(400.dp)
-                    .width(200.dp)
-                    .align(Alignment.Center),
-                elevation = 3.dp,
-                backgroundColor = Color.Gray
-            ) {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .scrollable(rememberScrollState(), orientation = Orientation.Vertical),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    //数据
-                    var id by viewModel.id
-                    var title by viewModel.title
-                    var detail by viewModel.detail
-                    var importance by viewModel.importance
-                    var complete by viewModel.complete
-                    var date by viewModel.date
-
-
-                    TextField(value = id, label = {
-                        Text(text = "id")
-                    }, onValueChange = {
-                        id = it
-                    })
-                    TextField(value = title, label = {
-                        Text(text = "title")
-                    }, onValueChange = {
-                        title = it
-                    })
-                    TextField(value = detail, label = {
-                        Text(text = "detail")
-                    }, onValueChange = {
-                        detail = it
-                    })
-                    TextField(value = importance, label = {
-                        Text(text = "importance")
-                    }, onValueChange = {
-                        importance = it
-                    })
-                    TextField(value = complete, label = {
-                        Text(text = "complete")
-                    }, onValueChange = {
-                        complete = it
-                    })
-                    TextField(value = date, label = {
-                        Text(text = "date")
-                    }, onValueChange = {
-                        date = it
-                    })
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        //Button_OK
-                        Button(onClick = {
-                            if (date.equals("")) {
-                                date = currentTime.formatTime()
-                            }
-                            val myData = MyData(
-                                title = title,
-                                detail = detail,
-                                importance = importance.toBoolean(),
-                                complete = complete.toBoolean(),
-                                date = date
-                            )
-                            if (!title.equals("")) {
-                                viewModel.insert(myData)
-                            }
-                            title = ""
-                            detail = ""
-                            ifAddNewMission = !ifAddNewMission
-                        }) {
-                            Text(text = "好了")
-                        }
-                        //Button_Cancel
-                        Button(onClick = {
-                            title = ""
-                            detail = ""
-                            ifAddNewMission = !ifAddNewMission
-                        }) {
-                            Text(text = "不要")
-                        }
-                    }
-
-
-                }
-            }
-        }
+//        if (ifAddNewMission) {
+//            Card(
+//                Modifier
+//                    .clip(RoundedCornerShape(10.dp))
+//                    .height(400.dp)
+//                    .width(200.dp)
+//                    .align(Alignment.Center),
+//                elevation = 3.dp,
+//                backgroundColor = Color.Gray
+//            ) {
+//                Column(
+//                    Modifier
+//                        .fillMaxSize()
+//                        .scrollable(rememberScrollState(), orientation = Orientation.Vertical),
+//                    verticalArrangement = Arrangement.Bottom
+//                ) {
+//                    //数据
+//                    var id by viewModel.id
+//                    var title by viewModel.title
+//                    var detail by viewModel.detail
+//                    var importance by viewModel.importance
+//                    var complete by viewModel.complete
+//                    var date by viewModel.date
+//
+//
+//                    TextField(value = id, label = {
+//                        Text(text = "id")
+//                    }, onValueChange = {
+//                        id = it
+//                    })
+//                    TextField(value = title, label = {
+//                        Text(text = "title")
+//                    }, onValueChange = {
+//                        title = it
+//                    })
+//                    TextField(value = detail, label = {
+//                        Text(text = "detail")
+//                    }, onValueChange = {
+//                        detail = it
+//                    })
+//                    TextField(value = importance, label = {
+//                        Text(text = "importance")
+//                    }, onValueChange = {
+//                        importance = it
+//                    })
+//                    TextField(value = complete, label = {
+//                        Text(text = "complete")
+//                    }, onValueChange = {
+//                        complete = it
+//                    })
+//                    TextField(value = date, label = {
+//                        Text(text = "date")
+//                    }, onValueChange = {
+//                        date = it
+//                    })
+//                    Row(
+//                        Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.SpaceAround
+//                    ) {
+//                        //Button_OK
+//                        Button(onClick = {
+//                            if (date.equals("")) {
+//                                date = currentTime.formatTime()
+//                            }
+//                            val myData = MyData(
+//                                title = title,
+//                                detail = detail,
+//                                importance = importance.toBoolean(),
+//                                complete = complete.toBoolean(),
+//                                date = date
+//                            )
+//                            if (!title.equals("")) {
+//                                viewModel.insert(myData)
+//                            }
+//                            title = ""
+//                            detail = ""
+//                            ifAddNewMission = !ifAddNewMission
+//                        }) {
+//                            Text(text = "好了")
+//                        }
+//                        //Button_Cancel
+//                        Button(onClick = {
+//                            title = ""
+//                            detail = ""
+//                            ifAddNewMission = !ifAddNewMission
+//                        }) {
+//                            Text(text = "不要")
+//                        }
+//                    }
+//
+//
+//                }
+//            }
+//        }
 
     }
 }
