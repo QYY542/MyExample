@@ -1,6 +1,7 @@
 package com.myexample.presentation.diary
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
@@ -11,8 +12,13 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
@@ -63,12 +69,16 @@ fun DiaryDetail(
     var date by remember {
         mutableStateOf(item.date)
     }
+    var mood by remember {
+        mutableStateOf(item.mood)
+    }
 
 
     id = item.id
     title = item.title
     detail = item.detail
     date = item.date
+    mood = item.mood
 
     Scaffold(topBar = {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
@@ -87,9 +97,15 @@ fun DiaryDetail(
     ) {
         Spacer(modifier = Modifier.height(50.dp))
 
+        EntryMoodSection(
+            currentMood = mood,
+        ) { mood = it
+            item.mood = mood
+            item.date = currentTime.formatTime()
+            item.dateDetail = currentTime.formatTimeDetail()
+            diaryViewModel.update(item)
 
-
-
+        }
 
 
         OutlinedTextField(
@@ -110,7 +126,7 @@ fun DiaryDetail(
             maxLines = 1,
             textStyle = MaterialTheme.typography.titleLarge,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(25.dp)
         )
         Spacer(modifier = Modifier.height(5.dp))
         OutlinedTextField(
@@ -130,10 +146,56 @@ fun DiaryDetail(
             ),
             textStyle = MaterialTheme.typography.titleMedium,
             modifier = Modifier.fillMaxSize(),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(25.dp)
         )
     }
 }
+}
+
+@Composable
+fun EntryMoodSection(
+    currentMood: Mood,
+    onMoodChange: (Mood) -> Unit
+) {
+    val moods = listOf(Mood.AWESOME, Mood.GOOD, Mood.OKAY, Mood.BAD, Mood.TERRIBLE)
+    Row(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        moods.forEach { mood ->
+            MoodItem(
+                mood = mood,
+                chosen = mood == currentMood,
+                onMoodChange = { onMoodChange(mood) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
+    Box(Modifier.clip(RoundedCornerShape(8.dp))){
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .clickable { onMoodChange() }
+                .padding(6.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = mood.icon),
+                contentDescription = mood.title,
+                tint = if (chosen) mood.color else Color.Gray,
+                modifier = Modifier.size(48.dp)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = mood.title,
+                color = if (chosen) mood.color else Color.Gray,
+                style = androidx.compose.material.MaterialTheme.typography.body2
+            )
+        }
+    }
 }
 @Preview
 @Composable

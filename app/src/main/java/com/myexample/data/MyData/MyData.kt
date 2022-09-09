@@ -3,6 +3,7 @@ package com.myexample.data.MyData
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.myexample.presentation.note.Status
 
 /*
   **Created by 24606 at 11:32 2022.
@@ -18,5 +19,6 @@ data class MyData(
     var detail: String = "",
     var importance: Boolean = false,
     var complete: Boolean = false,
-    var date: String = "2022-1-1"
+    var date: String = "2022-1-1",
+    var status: Status = Status.INCOMPLETED_GREEN
 )

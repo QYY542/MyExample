@@ -65,7 +65,10 @@ fun NoteHome_2(
     ) {
 
         Box(Modifier.fillMaxSize()) {
-            LazyColumn() {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(12.dp)
+            ) {
                 stickyHeader {
                     Spacer(modifier = Modifier.height(50.dp))
                 }
@@ -74,6 +77,7 @@ fun NoteHome_2(
                 }
                 itemsIndexed(taskToDo) { index, item ->
                     NoteCard(
+                        modifier = Modifier.animateItemPlacement(),
                         item = item,
                         complete = true,
                         homeScreen = false,
@@ -87,6 +91,7 @@ fun NoteHome_2(
 
                 itemsIndexed(taskCompleted) { index, item ->
                     NoteCard(
+                        modifier = Modifier.animateItemPlacement(),
                         item = item,
                         complete = false,
                         homeScreen = false,
