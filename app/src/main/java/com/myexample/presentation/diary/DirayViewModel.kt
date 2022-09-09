@@ -1,5 +1,6 @@
 package com.myexample.presentation.diary
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,7 +29,7 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.getAllDataDiray()
                 .collect {
-                    _state.value = it
+                    _state.value = it.reversed()
                 }
         }
     }
@@ -36,8 +37,8 @@ class DirayViewModel @Inject constructor(
     private val _stateById = MutableStateFlow<MyDiary>(MyDiary())
     val stateById: StateFlow<MyDiary> = _stateById
 
-    fun getById(idd:Int): Flow<MyDiary> {
-      return  myRepository.getByIdDiary(idd)
+    fun getById(idd: Int): Flow<MyDiary> {
+        return myRepository.getByIdDiary(idd)
     }
 
     fun insert(myDiary: MyDiary?) {
@@ -75,7 +76,7 @@ class DirayViewModel @Inject constructor(
     }
 
     //
-    var id = mutableStateOf(0)
+    var id: MutableState<Int?> = mutableStateOf(0)
 
     var title = mutableStateOf("")
 

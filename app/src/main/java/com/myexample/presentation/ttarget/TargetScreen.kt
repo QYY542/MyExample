@@ -31,6 +31,7 @@ fun TargetScreen(
     targetViewModel: TargetViewModel = hiltViewModel()
 ) {
     viewModel.setNavControllerNumber(2)
+    navController.enableOnBackPressed(false)
     Text(text = "Target")
 
     val state by targetViewModel.state.collectAsState()

@@ -14,6 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
@@ -50,24 +51,25 @@ fun NoteHome(
     val refresh by viewModel.refresh.collectAsState()
 
 
-    var taskToDo = state.filter {
-        !it.complete && it.date == constant.currTime
-    }
-    var taskCompleted = state.filter {
-        it.complete && it.date == constant.currTime
-    }
-
     var showDataPicker by remember {
         mutableStateOf(false)
     }
 
 
+    var taskToDo = state.filter {
+        !it.complete && it.date == constant.selectTime
+    }
+    var taskCompleted = state.filter {
+        it.complete && it.date == constant.selectTime
+    }
+
+
     LaunchedEffect(key1 = refresh) {
         taskToDo = state.filter {
-            !it.complete && it.date == constant.currTime
+            !it.complete && it.date == constant.selectTime
         }
         taskCompleted = state.filter {
-            it.complete && it.date == constant.currTime
+            it.complete && it.date == constant.selectTime
         }
     }
 
@@ -88,12 +90,12 @@ fun NoteHome(
                         Column(Modifier) {
                             Spacer(modifier = Modifier.height(10.dp))
                             Text(
-                                text = currentTime.formatTime(),
+                                text = constant.selectTime,
                                 fontFamily = FontFamily(Font(R.font.rubik_bold)),
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.clickable {
-
+                                    showDataPicker = !showDataPicker
                                 }
                             )
                         }
@@ -114,74 +116,91 @@ fun NoteHome(
             mutableStateOf(true)
         }
 
-        Column(Modifier.fillMaxSize()) {
-            Spacer(modifier = Modifier.height(60.dp))
-            Divider()
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(12.dp)
-            ) {
-                stickyHeader {
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .background(Color(241, 244, 252))
-                            .clickable {
-                                showIncompleted = !showIncompleted
-                            }
-                    ) {
-                        Text(
-                            text = "未完成",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                }
+        Box(Modifier.fillMaxSize()) {
 
-                if (showIncompleted) {
-                    itemsIndexed(taskToDo) { index, item ->
-                        NoteCard(
-                            modifier = Modifier,
-                            item = item,
-                            complete = true,
-                            homeScreen = true,
-                            viewModel = viewModel,
-                            onClick = { onClick(it) },
-                        )
-                    }
-                }
-
-
-
-
-                stickyHeader {
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .background(Color(241, 244, 252))
-                            .clickable {
-                                showCompleted = !showCompleted
-                            }
-                    ) {
-                        Text(
-                            text = "已完成",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
+            Column(Modifier.fillMaxSize()) {
+                Spacer(modifier = Modifier.height(60.dp))
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(12.dp)
+                ) {
+                    stickyHeader {
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .background(Color.White)
+                                .clickable {
+                                    showIncompleted = !showIncompleted
+                                }
+                        ) {
+                            Text(
+                                text = "未完成",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                     }
 
-                }
+                    if (showIncompleted) {
+                        itemsIndexed(taskToDo) { index, item ->
+                            NoteCard(
+                                modifier = Modifier,
+                                item = item,
+                                complete = true,
+                                homeScreen = true,
+                                viewModel = viewModel,
+                                onClick = { onClick(it) },
+                            )
+                        }
+                    }
 
-                if (showCompleted) {
-                    itemsIndexed(taskCompleted) { index, item ->
-                        NoteCard(
-                            modifier = Modifier,
-                            item = item,
-                            complete = false,
-                            homeScreen = true,
-                            viewModel = viewModel,
-                            onClick = { onClick(it) }
-                        )
+
+
+
+                    stickyHeader {
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .background(Color(241, 244, 252))
+                                .clickable {
+                                    showCompleted = !showCompleted
+                                }
+                        ) {
+                            Text(
+                                text = "已完成",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+
+                    }
+
+                    if (showCompleted) {
+                        itemsIndexed(taskCompleted) { index, item ->
+                            NoteCard(
+                                modifier = Modifier,
+                                item = item,
+                                complete = false,
+                                homeScreen = true,
+                                viewModel = viewModel,
+                                onClick = { onClick(it) }
+                            )
+                        }
+                    }
+                }
+            }
+
+            Box(Modifier.align(Alignment.Center)) {
+                if (showDataPicker) {
+                    DatePicker(
+                        year = currentTime.year(),
+                        month = currentTime.month(),
+                        day = currentTime.day()
+                    ) { selected, year, month, day ->
+                        val selectTime = "$year-$month-$day"
+                        constant.selectTime = selectTime
+                        viewModel.onRefresh()
+                        showDataPicker = !showDataPicker
                     }
                 }
             }

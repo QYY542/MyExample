@@ -25,14 +25,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import androidx.navigation.NavController
 
 import com.myexample.MainActivity
 import com.myexample.R
 import com.myexample.data.MyData.MyData
+import com.myexample.presentation.diary.DiaryDetail
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.note.Status
 import com.myexample.presentation.ui.theme.Green
@@ -48,18 +54,36 @@ import java.util.*
 fun AddTaskBottomSheetContent(
     sheetState: ModalBottomSheetState,
     viewModel: MyViewModel,
+    item: MyData,
+    navController: NavController
+) {
+
+    when (viewModel.navController_Number.value) {
+        0 -> {
+            AddTaskBottomSheetContentNote(sheetState, viewModel, item)
+        }
+        1 -> {
+            AddTaskBottomSheetContentNote(sheetState, viewModel, item)
+        }
+        2 -> {
+            AddTaskBottomSheetContentNote(sheetState, viewModel, item)
+        }
+        3 -> {
+            DiaryDetail(id = null, navController = navController, sheetState = sheetState)
+        }
+
+    }
+
+
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun AddTaskBottomSheetContentNote(
+    sheetState: ModalBottomSheetState,
+    viewModel: MyViewModel,
     item: MyData
 ) {
-//    var id by viewModel.id
-//    var title by viewModel.title
-//    var detail by viewModel.detail
-//    var importance by viewModel.importance
-//    var complete by viewModel.complete
-//    var date by viewModel.date
-//    val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
-//    var priority by rememberSaveable { mutableStateOf(Priority.LOW) }
-//    var coroutineScope = rememberCoroutineScope()
-
     var id: Int? by remember {
         mutableStateOf(1)
     }
@@ -102,7 +126,9 @@ fun AddTaskBottomSheetContent(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
                 text = "Add Task",
-                style = MaterialTheme.typography.h5
+                fontFamily = FontFamily(Font(R.font.rubik_bold)),
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
             )
             Button(
                 onClick = {
@@ -121,8 +147,6 @@ fun AddTaskBottomSheetContent(
                     if (!title.equals("")) {
                         viewModel.insert(myData)
                     }
-                    title = ""
-                    detail = ""
                     coroutineScope.launch {
                         sheetState.hide()
                     }
@@ -145,6 +169,7 @@ fun AddTaskBottomSheetContent(
             onValueChange = { title = it },
             label = { Text(text = "title") },
             shape = RoundedCornerShape(15.dp),
+            textStyle = TextStyle(fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -153,6 +178,7 @@ fun AddTaskBottomSheetContent(
             onValueChange = { detail = it },
             label = { Text(text = "detail") },
             shape = RoundedCornerShape(15.dp),
+            textStyle = TextStyle(fontSize = 15.sp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)

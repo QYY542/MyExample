@@ -22,22 +22,10 @@ fun NoteScreen(
     onClick: (item: MyData) -> Unit
 ) {
     viewModel.setNavControllerNumber(1)
-
-    //Pager
-    var pagerState = rememberPagerState(0)
-    HorizontalPager(
-        state = pagerState,
-        count = 2
-    ) { page ->
-        when (page) {
-            0 -> NoteHome(viewModel, onClick = {
-                onClick(it)
-            })
-            1 -> NoteHome_2(viewModel, onClick = {
-                onClick(it)
-            })
-        }
-    }
+    navController.enableOnBackPressed(false)
+    NoteHome(viewModel, onClick = {
+        onClick(it)
+    })
 }
 
 

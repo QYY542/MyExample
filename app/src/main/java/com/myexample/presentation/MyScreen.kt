@@ -322,6 +322,7 @@ fun MyScreen(
                                         //关闭添加窗口
                                         coroutineScope.launch {
                                             sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                                            sheetState.hide()
                                         }
 
 
@@ -356,6 +357,11 @@ fun MyScreen(
                                             navController.navigate("target_screen")
 //                                            viewModel.setNavControllerNumber(3)
                                         }
+                                        //关闭添加窗口
+                                        coroutineScope.launch {
+                                            sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                                            sheetState.hide()
+                                        }
 
                                     },
                                     onDragCancel = {
@@ -375,7 +381,11 @@ fun MyScreen(
                                             dpState_3 = 55.dp
                                         }
 
-
+                                        //关闭添加窗口
+                                        coroutineScope.launch {
+                                            sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                                            sheetState.hide()
+                                        }
                                     }
                                 )
                             }) {
@@ -398,14 +408,17 @@ fun MyScreen(
                 sheetState = sheetState,
                 sheetShape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
                 sheetContent = {
+
                     AddTaskBottomSheetContent(
                         sheetState = sheetState,
                         viewModel = viewModel,
-                        item = item
+                        item = item,
+                        navController = navController
                     )
+
                 }) {
                 // Screen content
-                Nav(navController, viewModel, onClick = {
+                Nav(navController, viewModel, sheetState, onClick = {
                     item = it
                     coroutineScope.launch {
                         if (sheetState.isVisible) {
@@ -419,103 +432,6 @@ fun MyScreen(
             }
         }
 
-        /**
-         * 中间的卡片
-         */
-//        if (ifAddNewMission) {
-//            Card(
-//                Modifier
-//                    .clip(RoundedCornerShape(10.dp))
-//                    .height(400.dp)
-//                    .width(200.dp)
-//                    .align(Alignment.Center),
-//                elevation = 3.dp,
-//                backgroundColor = Color.Gray
-//            ) {
-//                Column(
-//                    Modifier
-//                        .fillMaxSize()
-//                        .scrollable(rememberScrollState(), orientation = Orientation.Vertical),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    //数据
-//                    var id by viewModel.id
-//                    var title by viewModel.title
-//                    var detail by viewModel.detail
-//                    var importance by viewModel.importance
-//                    var complete by viewModel.complete
-//                    var date by viewModel.date
-//
-//
-//                    TextField(value = id, label = {
-//                        Text(text = "id")
-//                    }, onValueChange = {
-//                        id = it
-//                    })
-//                    TextField(value = title, label = {
-//                        Text(text = "title")
-//                    }, onValueChange = {
-//                        title = it
-//                    })
-//                    TextField(value = detail, label = {
-//                        Text(text = "detail")
-//                    }, onValueChange = {
-//                        detail = it
-//                    })
-//                    TextField(value = importance, label = {
-//                        Text(text = "importance")
-//                    }, onValueChange = {
-//                        importance = it
-//                    })
-//                    TextField(value = complete, label = {
-//                        Text(text = "complete")
-//                    }, onValueChange = {
-//                        complete = it
-//                    })
-//                    TextField(value = date, label = {
-//                        Text(text = "date")
-//                    }, onValueChange = {
-//                        date = it
-//                    })
-//                    Row(
-//                        Modifier.fillMaxWidth(),
-//                        horizontalArrangement = Arrangement.SpaceAround
-//                    ) {
-//                        //Button_OK
-//                        Button(onClick = {
-//                            if (date.equals("")) {
-//                                date = currentTime.formatTime()
-//                            }
-//                            val myData = MyData(
-//                                title = title,
-//                                detail = detail,
-//                                importance = importance.toBoolean(),
-//                                complete = complete.toBoolean(),
-//                                date = date
-//                            )
-//                            if (!title.equals("")) {
-//                                viewModel.insert(myData)
-//                            }
-//                            title = ""
-//                            detail = ""
-//                            ifAddNewMission = !ifAddNewMission
-//                        }) {
-//                            Text(text = "好了")
-//                        }
-//                        //Button_Cancel
-//                        Button(onClick = {
-//                            title = ""
-//                            detail = ""
-//                            ifAddNewMission = !ifAddNewMission
-//                        }) {
-//                            Text(text = "不要")
-//                        }
-//                    }
-//
-//
-//                }
-//            }
-//        }
 
     }
 }

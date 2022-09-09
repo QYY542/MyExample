@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
@@ -19,41 +21,55 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.createBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mhss.app.mybrain.presentation.tasks.SheetHandle
+import com.mhss.app.mybrain.presentation.tasks.getStatus
+import com.myexample.R
+import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
+import com.myexample.utils.constant
 import com.myexample.utils.currentTime
+import kotlinx.coroutines.launch
 
 /*
   **Created by 24606 at 20:24 2022.
 */
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun DiaryDetail(
-    id: Int,
+    id: Int?,
     navController: NavController,
+    sheetState: ModalBottomSheetState,
     diaryViewModel: DirayViewModel = hiltViewModel()
 ) {
     navController.enableOnBackPressed(true)
 //    val state by diaryViewModel.getById(id).collectAsState(MyDiary())
     diaryViewModel.getById(1)
     val state by diaryViewModel.state.collectAsState()
+    var coroutineScope = rememberCoroutineScope()
 
     var item by remember {
         mutableStateOf(MyDiary())
     }
-    
 
-    state.forEach{
-        if(it.id == id){
-            item  = it
+    if (constant.selectId != null) {
+        state.forEach {
+            if (it.id == constant.selectId) {
+                item = it
+            }
         }
     }
+
 
 //    Text(text = item.id.toString())
 
@@ -74,37 +90,70 @@ fun DiaryDetail(
     }
 
 
-    id = item.id
-    title = item.title
-    detail = item.detail
-    date = item.date
-    mood = item.mood
+    LaunchedEffect(key1 = constant.selectId) {
+        id = item.id
+        title = item.title
+        detail = item.detail
+        date = item.date
+        mood = item.mood
+    }
 
-    Scaffold(topBar = {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "新建日记")
-            Button(onClick = { navController.navigate("diary_screen") }) {
-                Text(text = "返回")
-            }
-        }
 
-    }) {
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(15.dp)
+            .padding(horizontal = 16.dp, vertical = 24.dp)
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
+        SheetHandle(Modifier.align(Alignment.CenterHorizontally))
+
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                text = "Add Diary",
+                fontFamily = FontFamily(Font(R.font.rubik_bold)),
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Button(
+                onClick = {
+                    if (date.equals("")) {
+                        date = currentTime.formatTime()
+                    }
+                    val myDiary = MyDiary(
+                        id = id,
+                        title = title,
+                        detail = detail,
+                        date = date,
+                        dateDetail = currentTime.formatTimeDetail(),
+                        mood = mood
+                    )
+                    if (!title.equals("")) {
+                        diaryViewModel.insert(myDiary)
+                    }
+//                    title = ""
+//                    detail = ""
+                    coroutineScope.launch {
+                        sheetState.hide()
+                    }
+                }, modifier = Modifier
+                    .height(30.dp),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                androidx.compose.material.Text(
+                    text = "Add"
+                )
+            }
+        }
+        Spacer(Modifier.height(16.dp))
 
         EntryMoodSection(
             currentMood = mood,
-        ) { mood = it
+        ) {
+            mood = it
             item.mood = mood
             item.date = currentTime.formatTime()
             item.dateDetail = currentTime.formatTimeDetail()
             diaryViewModel.update(item)
-
         }
 
 
@@ -116,7 +165,7 @@ fun DiaryDetail(
                 item.date = currentTime.formatTime()
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
-                            },
+            },
             label = { Text("标题", style = MaterialTheme.typography.titleLarge) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -137,7 +186,7 @@ fun DiaryDetail(
                 item.date = currentTime.formatTime()
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
-                            },
+            },
             label = { Text("内容", style = MaterialTheme.typography.titleMedium) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -150,7 +199,7 @@ fun DiaryDetail(
         )
     }
 }
-}
+
 
 @Composable
 fun EntryMoodSection(
@@ -175,7 +224,7 @@ fun EntryMoodSection(
 
 @Composable
 private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
-    Box(Modifier.clip(RoundedCornerShape(8.dp))){
+    Box(Modifier.clip(RoundedCornerShape(8.dp))) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -197,6 +246,7 @@ private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
         }
     }
 }
+
 @Preview
 @Composable
 fun DiaryDetailPreview() {

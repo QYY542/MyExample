@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.presentation.ui.theme.Gray
@@ -54,6 +55,7 @@ fun NoteCard(
             modifier = Modifier
                 .combinedClickable(
                     onClick = {
+                        onClick(MyData())
                         onClick(item)
                     },
                     onDoubleClick = {
@@ -72,21 +74,24 @@ fun NoteCard(
                         vibrate(context)
                         val myData = item
 //                    myData.importance = !myData.importance
-                        myData.status = when (myData.status) {
-                            Status.INCOMPLETED_GREEN -> {
-                                Status.INCOMPLETED_ORANGE
+                        if (complete) {
+                            myData.status = when (myData.status) {
+                                Status.INCOMPLETED_GREEN -> {
+                                    Status.INCOMPLETED_ORANGE
+                                }
+                                Status.INCOMPLETED_ORANGE -> {
+                                    Status.INCOMPLETED_RED
+                                }
+                                Status.INCOMPLETED_RED -> {
+                                    Status.INCOMPLETED_GREEN
+                                }
+                                else -> {
+                                    Status.INCOMPLETED_GREEN
+                                }
                             }
-                            Status.INCOMPLETED_ORANGE -> {
-                                Status.INCOMPLETED_RED
-                            }
-                            Status.INCOMPLETED_RED -> {
-                                Status.INCOMPLETED_GREEN
-                            }
-                            else -> {
-                                Status.INCOMPLETED_GREEN
-                            }
+                            viewModel.update(myData)
                         }
-                        viewModel.update(myData)
+
                     }
                 )
                 .padding(12.dp)
@@ -121,13 +126,8 @@ fun NoteCard(
 
                     Spacer(Modifier.width(8.dp))
 
-                    Text(
-                        item.title,
-                        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.fillMaxWidth(0.8f)
-                    )
+                    MyTitleText(text = item.title, complete = complete)
+
 
                 }
 
@@ -155,90 +155,13 @@ fun NoteCard(
 
             if (item.detail.isNotBlank()) {
                 Spacer(Modifier.height(8.dp))
-                Text(
-                    item.detail,
-                    style = MaterialTheme.typography.body2,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
+                MyDetialText(text = item.detail, complete = complete)
+
             }
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = item.date,
-                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
-                modifier = Modifier.align(Alignment.End)
-            )
+
+
         }
     }
-//    Card(
-//        Modifier
-//            .fillMaxWidth()
-//            .padding(10.dp, 5.dp)
-//            .clip(RoundedCornerShape(25.dp))
-//            .combinedClickable(
-//                onClick = {
-//
-//                },
-//                onDoubleClick = {
-//                    vibrate_2(context)
-//                    val myData = item
-//                    myData.complete = complete
-//                    viewModel.update(myData)
-//                },
-//                onLongClick = {
-//                    vibrate(context)
-//                    val myData = item
-//                    myData.importance = !myData.importance
-//                    viewModel.update(myData)
-//                }
-//            ),
-//        elevation = 8.dp,
-//        backgroundColor =
-//        if (!item.complete) {
-//            if (item.importance) Color.Red else Color.Cyan
-//        } else {
-//            Color.Gray
-//        }
-//
-//    ) {
-//        Row(
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Column(Modifier.padding(10.dp, 8.dp)) {
-//                MyTitleText(text = item.title, complete)
-//                MyTitleText(text = item.detail, complete)
-//            }
-//
-//
-//            Row() {
-//                if (!homeScreen) {
-//                    IconButton(onClick = {
-//                        vibrate(context)
-//                        val myData = item
-//                        myData.date = currentTime.formatTime()
-//                        viewModel.update(myData)
-//                    }) {
-//                        Text(text = "2")
-//                    }
-//                }
-//                IconButton(onClick = {
-//                    vibrate(context)
-//                    item.id?.let { viewModel.deleteById(it) }
-//                }) {
-//                    Text(text = "1")
-//                }
-//                Checkbox(checked = item.complete, onCheckedChange = {
-//                    vibrate_2(context)
-//                    val myData = item
-//                    myData.complete = complete
-//                    viewModel.update(myData)
-//                })
-//            }
-//
-//        }
-//
-//    }
 }
 
 @Composable
@@ -248,8 +171,27 @@ fun MyTitleText(
 ) {
     Text(
         text = text,
+        style = MaterialTheme.typography.body2,
+        fontSize = 18.sp,
+        maxLines = 1,
         textDecoration = if (!complete) TextDecoration.LineThrough else null,
-        maxLines = 1
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.fillMaxWidth(0.8f)
+    )
+}
+
+@Composable
+fun MyDetialText(
+    text: String,
+    complete: Boolean
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.body2,
+        fontSize = 15.sp,
+        maxLines = 2,
+        textDecoration = if (!complete) TextDecoration.LineThrough else null,
+        overflow = TextOverflow.Ellipsis
     )
 }
 
