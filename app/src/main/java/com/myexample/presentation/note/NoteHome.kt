@@ -29,6 +29,7 @@ import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
 import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.utils.constant
+import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
 
 /*
@@ -56,6 +57,10 @@ fun NoteHome(
         it.complete && it.date == constant.currTime
     }
 
+    var showDataPicker by remember {
+        mutableStateOf(false)
+    }
+
 
     LaunchedEffect(key1 = refresh) {
         taskToDo = state.filter {
@@ -72,12 +77,29 @@ fun NoteHome(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "Tasks",
-                        fontFamily = FontFamily(Font(R.font.rubik_bold)),
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(
+                            text = "Tasks",
+                            fontFamily = FontFamily(Font(R.font.rubik_bold)),
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+
+                        Column(Modifier) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                text = currentTime.formatTime(),
+                                fontFamily = FontFamily(Font(R.font.rubik_bold)),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.clickable {
+
+                                }
+                            )
+                        }
+
+                    }
+
                 },
                 backgroundColor = Color.White
 

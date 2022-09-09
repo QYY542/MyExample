@@ -104,30 +104,34 @@ fun AddTaskBottomSheetContent(
                 text = "Add Task",
                 style = MaterialTheme.typography.h5
             )
-            Button(onClick = {
-                if (date.equals("")) {
-                    date = currentTime.formatTime()
-                }
-                val myData = MyData(
-                    id = id,
-                    title = title,
-                    detail = detail,
-                    importance = importance,
-                    complete = complete,
-                    date = date,
-                    status = getStatus(priority)
-                )
-                if (!title.equals("")) {
-                    viewModel.insert(myData)
-                }
-                title = ""
-                detail = ""
-                coroutineScope.launch {
-                    sheetState.hide()
-                }
-            }, modifier = Modifier.height(25.dp)) {
+            Button(
+                onClick = {
+                    if (date.equals("")) {
+                        date = currentTime.formatTime()
+                    }
+                    val myData = MyData(
+                        id = id,
+                        title = title,
+                        detail = detail,
+                        importance = importance,
+                        complete = complete,
+                        date = date,
+                        status = getStatus(priority)
+                    )
+                    if (!title.equals("")) {
+                        viewModel.insert(myData)
+                    }
+                    title = ""
+                    detail = ""
+                    coroutineScope.launch {
+                        sheetState.hide()
+                    }
+                }, modifier = Modifier
+                    .height(30.dp),
+                shape = RoundedCornerShape(10.dp)
+            ) {
                 Text(
-                    text = "Add Task"
+                    text = "Add"
                 )
             }
         }
@@ -151,6 +155,7 @@ fun AddTaskBottomSheetContent(
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
                 .fillMaxWidth()
+                .height(150.dp)
         )
         Spacer(Modifier.height(12.dp))
         PriorityTabRow(
@@ -159,7 +164,7 @@ fun AddTaskBottomSheetContent(
             onChange = { priority = it }
         )
 
-        Spacer(Modifier.height(300.dp))
+        Spacer(Modifier.height(320.dp))
 
 
     }

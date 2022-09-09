@@ -319,6 +319,11 @@ fun MyScreen(
 //                                    replay = true
                                             offState = IntOffset(offState.x - 250, offState.y - 250)
                                         }
+                                        //关闭添加窗口
+                                        coroutineScope.launch {
+                                            sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                                        }
+
 
                                     },
                                     onDragEnd = {

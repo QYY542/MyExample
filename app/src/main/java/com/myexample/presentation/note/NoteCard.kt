@@ -22,7 +22,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.myexample.R
 import com.myexample.data.MyData.MyData
+import com.myexample.presentation.ui.theme.Gray
+import com.myexample.presentation.ui.theme.Red
 import com.myexample.utils.currentTime
 import com.myexample.utils.vibrate
 import com.myexample.utils.vibrate_2
@@ -115,14 +118,15 @@ fun NoteCard(
                         )
 
                     }
-                    
+
                     Spacer(Modifier.width(8.dp))
 
                     Text(
                         item.title,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth(0.8f)
                     )
 
                 }
@@ -130,22 +134,17 @@ fun NoteCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
 
                     IconButton(onClick = {
+
                         vibrate_2(context)
-                        val myData = item
-                        myData.complete = complete
-                        if (myData.complete) {
-                            myData.status = Status.COMPLETED
-                        } else {
-                            myData.status = Status.INCOMPLETED_GREEN
-                        }
-                        viewModel.update(myData)
+                        item.id?.let { viewModel.deleteById(it) }
+
 
                     }, modifier = Modifier.size(30.dp)) {
 
                         Icon(
-                            painterResource(item.status.icon),
+                            painterResource(R.drawable.ic_delete),
                             item.status.title,
-                            tint = item.status.color,
+                            tint = Red,
                             modifier = Modifier.size(30.dp)
                         )
 
