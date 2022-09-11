@@ -54,59 +54,52 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun DiaryDetail(
-    id: Int?,
+    item: MyDiary,
     navController: NavController,
     sheetState: ModalBottomSheetState,
-    diaryViewModel: DirayViewModel = hiltViewModel()
+    diaryViewModel: DirayViewModel
 ) {
 //    val state by diaryViewModel.getById(id).collectAsState(MyDiary())
     diaryViewModel.getById(1)
     val state by diaryViewModel.state.collectAsState()
     var coroutineScope = rememberCoroutineScope()
 
-    var item by remember {
-        mutableStateOf(MyDiary())
-    }
-
-    if (constant.selectId != null) {
-        state.forEach {
-            if (it.id == constant.selectId) {
-                item = it
-            }
-        }
-    }
-
 
 //    Text(text = item.id.toString())
 
-    var id by remember {
-        mutableStateOf(item.id)
+    var id: Int? by remember {
+        mutableStateOf(null)
     }
     var title by remember {
-        mutableStateOf(item.title)
+        mutableStateOf("")
     }
     var detail by remember {
-        mutableStateOf(item.detail)
+        mutableStateOf("")
     }
     var date by remember {
-        mutableStateOf(item.date)
+        mutableStateOf("")
     }
     var mood by remember {
-        mutableStateOf(item.mood)
+        mutableStateOf(Mood.AWESOME)
     }
 
 
     LaunchedEffect(
-        key1 = constant.selectId,
+        key1 = item,
         key2 = constant.onAddButton,
         key3 = constant.onAddButtonChange
     ) {
         if (constant.onAddButton) {
-            item = MyDiary()
+            var item = MyDiary()
+            state.forEach {
+                if (it.date.equals(currentTime.formatTime())) {
+                    item = it
+                }
+            }
             id = item.id
             title = item.title
             detail = item.detail
-            date = item.date
+            date = currentTime.formatTime()
             mood = item.mood
         } else {
             id = item.id
@@ -118,7 +111,7 @@ fun DiaryDetail(
     }
 
     LaunchedEffect(key1 = sheetState.isVisible) {
-        if (!sheetState.isVisible) {
+        if (!sheetState.isVisible && date != currentTime.formatTime()) {
             id = null
             title = ""
             detail = ""
@@ -138,13 +131,14 @@ fun DiaryDetail(
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                text = "Add Diary",
+                text = date,
                 fontFamily = FontFamily(Font(R.font.rubik_bold)),
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
             )
             Button(
                 onClick = {
+                    diaryViewModel.onRefresh()
                     if (date.equals("")) {
                         date = currentTime.formatTime()
                     }
@@ -163,6 +157,7 @@ fun DiaryDetail(
                     coroutineScope.launch {
                         sheetState.hide()
                     }
+                    diaryViewModel.onRefresh()
                 }, modifier = Modifier
                     .height(30.dp),
                 shape = RoundedCornerShape(10.dp)
@@ -177,22 +172,26 @@ fun DiaryDetail(
         EntryMoodSection(
             currentMood = mood,
         ) {
+            diaryViewModel.onRefresh()
             mood = it
             item.mood = mood
             item.date = currentTime.formatTime()
             item.dateDetail = currentTime.formatTimeDetail()
             diaryViewModel.update(item)
+            diaryViewModel.onRefresh()
         }
 
 
         OutlinedTextField(
             value = title,
             onValueChange = {
+                diaryViewModel.onRefresh()
                 title = it
                 item.title = it
                 item.date = currentTime.formatTime()
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
+                diaryViewModel.onRefresh()
             },
             label = { Text("Title", style = MaterialTheme.typography.titleLarge) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -210,11 +209,13 @@ fun DiaryDetail(
         OutlinedTextField(
             value = detail,
             onValueChange = {
+                diaryViewModel.onRefresh()
                 detail = it
                 item.detail = it
                 item.date = currentTime.formatTime()
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
+                diaryViewModel.onRefresh()
             },
             label = { Text("Content", style = MaterialTheme.typography.titleMedium) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -226,7 +227,7 @@ fun DiaryDetail(
             modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(25.dp)
         )
-        Spacer(modifier = Modifier.height(400.dp))
+        Spacer(modifier = Modifier.height(340.dp))
 
     }
 }

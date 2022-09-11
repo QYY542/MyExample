@@ -25,11 +25,18 @@ class DirayViewModel @Inject constructor(
     private val _state = MutableStateFlow<List<MyDiary>>(listOf())
     val state: StateFlow<List<MyDiary>> = _state
 
+    private val _refresh = MutableStateFlow<Int>(0)
+    val refresh: StateFlow<Int> = _refresh
+
+    fun onRefresh() {
+        _refresh.value++
+    }
+
     fun getAllData() {
         viewModelScope.launch {
             myRepository.getAllDataDiray()
                 .collect {
-                    _state.value = it.reversed()
+                    _state.value = it
                 }
         }
     }
@@ -45,6 +52,7 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.insertDiray(myDiary)
             getAllData()
+            onRefresh()
         }
     }
 
@@ -52,6 +60,7 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.deleteAllDiray()
             getAllData()
+            onRefresh()
         }
     }
 
@@ -59,6 +68,7 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.deleteByIdDiray(id)
             getAllData()
+            onRefresh()
         }
     }
 
@@ -66,12 +76,14 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.updateDiray(myDiary)
             getAllData()
+            onRefresh()
         }
     }
 
     init {
         viewModelScope.launch {
             getAllData()
+            onRefresh()
         }
     }
 

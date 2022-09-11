@@ -189,7 +189,7 @@ fun MyTitleText(
 ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.body2,
+        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
         fontSize = 18.sp,
         maxLines = 1,
         textDecoration = if (!complete) TextDecoration.LineThrough else null,

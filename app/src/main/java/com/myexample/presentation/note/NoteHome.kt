@@ -133,7 +133,7 @@ fun NoteHome(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-//                    contentPadding = PaddingValues(12.dp)
+                    contentPadding = PaddingValues(12.dp)
                 ) {
                     stickyHeader {
                         Row(

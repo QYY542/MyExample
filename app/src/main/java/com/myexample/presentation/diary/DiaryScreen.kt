@@ -39,6 +39,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.myexample.R
+import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.note.NoteHome
@@ -60,11 +61,14 @@ fun DiaryScreen(
     navController: NavController,
     sheetState: ModalBottomSheetState,
     viewModel: MyViewModel,
-    dirayViewModel: DirayViewModel = hiltViewModel()
+    dirayViewModel: DirayViewModel,
+    onClick: (item: MyDiary) -> Unit
 ) {
     viewModel.setNavControllerNumber(3)
     navController.enableOnBackPressed(false)
-    DirayHome(sheetState)
+    DirayHome(sheetState, dirayViewModel, onClick = {
+        onClick(it)
+    })
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -75,12 +79,22 @@ fun DiaryScreen(
 @Composable
 fun DirayHome(
     sheetState: ModalBottomSheetState,
-    dirayViewModel: DirayViewModel = hiltViewModel()
+    dirayViewModel: DirayViewModel,
+    onClick: (item: MyDiary) -> Unit
 ) {
     val state by dirayViewModel.state.collectAsState()
     val context = LocalContext.current
     var coroutineScope = rememberCoroutineScope()
+    val refresh by dirayViewModel.refresh.collectAsState()
 
+    var list by remember {
+        mutableStateOf(state.reversed())
+    }
+
+    LaunchedEffect(key1 = refresh) {
+        list = state.reversed()
+        Log.d("====", "refresh")
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -118,7 +132,7 @@ fun DirayHome(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    itemsIndexed(state) { index, item ->
+                    itemsIndexed(list) { index, item ->
 
 
                         ///
@@ -138,6 +152,7 @@ fun DirayHome(
                                             constant.selectId = item.id
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
+                                        onClick(item)
                                     }
                                     .padding(12.dp)
                                     .fillMaxWidth()
@@ -159,7 +174,8 @@ fun DirayHome(
                                             style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                                             fontSize = 18.sp,
                                             maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier.fillMaxWidth(0.8f)
                                         )
                                     }
 
@@ -209,7 +225,7 @@ fun DirayHome(
                                 }
                                 Spacer(Modifier.height(3.dp))
                                 Text(
-                                    text = item.dateDetail,
+                                    text = item.date,
                                     style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
                                     modifier = Modifier.align(Alignment.End),
                                     fontFamily = FontFamily(Font(R.font.rubik_bold)),

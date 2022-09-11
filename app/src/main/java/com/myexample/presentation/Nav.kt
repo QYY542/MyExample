@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.myexample.data.MyData.MyData
+import com.myexample.data.MyDiary.MyDiary
 import com.myexample.presentation.diary.DiaryDetail
 import com.myexample.presentation.diary.DiaryScreen
 import com.myexample.presentation.diary.DirayViewModel
@@ -29,8 +30,10 @@ import com.myexample.presentation.note.MyViewModel
 fun Nav(
     navController: NavController,
     viewModel: MyViewModel,
+    dirayViewModel: DirayViewModel,
     sheetState: ModalBottomSheetState,
-    onClick: (item: MyData) -> Unit
+    onClick: (item: MyData) -> Unit,
+    onClickDiary: (item: MyDiary) -> Unit
 ) {
     NavHost(
         navController = navController as NavHostController,
@@ -45,7 +48,9 @@ fun Nav(
             }, sheetState)
         }
         composable("diary_screen") {
-            DiaryScreen(navController, sheetState, viewModel)
+            DiaryScreen(navController, sheetState, viewModel, dirayViewModel, onClick = {
+                onClickDiary(it)
+            })
         }
         composable("target_screen") {
             TargetScreen(navController, viewModel)

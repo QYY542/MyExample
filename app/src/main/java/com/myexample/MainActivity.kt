@@ -17,6 +17,8 @@ import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.test.TestHome
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.view.WindowCompat
+import androidx.room.util.TableInfo
+import com.myexample.presentation.diary.DirayViewModel
 import com.myexample.utils.constant.inSheet
 import com.myexample.utils.constant.isChange
 
@@ -40,10 +42,11 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         val viewModel: MyViewModel by viewModels()
+                        val diaryViewModel: DirayViewModel by viewModels()
 
                         Column(Modifier.fillMaxSize()) {
                             Spacer(modifier = Modifier.height(30.dp))
-                            MyScreen(viewModel)
+                            MyScreen(viewModel, diaryViewModel)
 //                            TestHome(viewModel)
                         }
 

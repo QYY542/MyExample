@@ -48,7 +48,9 @@ import androidx.navigation.NavController
 import com.myexample.MainActivity
 import com.myexample.R
 import com.myexample.data.MyData.MyData
+import com.myexample.data.MyDiary.MyDiary
 import com.myexample.presentation.diary.DiaryDetail
+import com.myexample.presentation.diary.DirayViewModel
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.note.Status
 import com.myexample.presentation.note.toPriority
@@ -68,7 +70,9 @@ import java.util.*
 fun AddTaskBottomSheetContent(
     sheetState: ModalBottomSheetState,
     viewModel: MyViewModel,
+    diaryViewModel: DirayViewModel,
     item: MyData,
+    itemDiary: MyDiary,
     navController: NavController
 ) {
 
@@ -83,7 +87,12 @@ fun AddTaskBottomSheetContent(
             AddTaskBottomSheetContentNote(sheetState, viewModel, item)
         }
         3 -> {
-            DiaryDetail(id = null, navController = navController, sheetState = sheetState)
+            DiaryDetail(
+                item = itemDiary,
+                navController = navController,
+                sheetState = sheetState,
+                diaryViewModel = diaryViewModel
+            )
         }
 
     }
@@ -99,7 +108,7 @@ fun AddTaskBottomSheetContentNote(
     item: MyData
 ) {
     var id: Int? by remember {
-        mutableStateOf(1)
+        mutableStateOf(null)
     }
     var title by remember {
         mutableStateOf("")
@@ -131,7 +140,11 @@ fun AddTaskBottomSheetContentNote(
     var coroutineScope = rememberCoroutineScope()
 
 
-    LaunchedEffect(key1 = item, key2 = constant.onAddButton, key3 = constant.onAddButtonChange) {
+    LaunchedEffect(
+        key1 = item,
+        key2 = constant.onAddButton,
+        key3 = constant.onAddButtonChange
+    ) {
         if (constant.onAddButton) {
             val item = MyData()
             id = item.id
@@ -161,7 +174,7 @@ fun AddTaskBottomSheetContentNote(
         if (!sheetState.isVisible) {
             id = null
             title = ""
-            detail = ""
+            detail = "●"
             detail_2 = TextFieldValue(text = detail, selection = TextRange(detail.length))
         }
 

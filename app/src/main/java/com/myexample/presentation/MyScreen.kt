@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
 import com.myexample.data.MyData.MyData
+import com.myexample.data.MyDiary.MyDiary
+import com.myexample.presentation.diary.DirayViewModel
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
 import com.myexample.presentation.note.MyViewModel
@@ -54,7 +56,8 @@ val localY = 60.dp
 )
 @Composable
 fun MyScreen(
-    viewModel: MyViewModel
+    viewModel: MyViewModel,
+    diaryViewModel: DirayViewModel
 ) {
     //基本
     val context = LocalContext.current
@@ -176,6 +179,10 @@ fun MyScreen(
 
     var item by remember {
         mutableStateOf(MyData())
+    }
+
+    var itemDiary by remember {
+        mutableStateOf(MyDiary())
     }
 
     var inSheet by remember {
@@ -451,13 +458,15 @@ fun MyScreen(
                     AddTaskBottomSheetContent(
                         sheetState = sheetState,
                         viewModel = viewModel,
+                        diaryViewModel = diaryViewModel,
                         item = item,
+                        itemDiary = itemDiary,
                         navController = navController
                     )
 
                 }) {
                 // Screen content
-                Nav(navController, viewModel, sheetState, onClick = {
+                Nav(navController, viewModel, diaryViewModel, sheetState, onClick = {
                     item = it
                     coroutineScope.launch {
                         if (sheetState.isVisible) {
@@ -467,6 +476,8 @@ fun MyScreen(
                         }
                     }
 
+                }, onClickDiary = {
+                    itemDiary = it
                 })
             }
         }
