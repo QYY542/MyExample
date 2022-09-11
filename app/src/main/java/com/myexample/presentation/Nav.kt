@@ -42,7 +42,7 @@ fun Nav(
         composable("note_screen") {
             NoteScreen(navController, viewModel, onClick = {
                 onClick(it)
-            })
+            }, sheetState)
         }
         composable("diary_screen") {
             DiaryScreen(navController, sheetState, viewModel)

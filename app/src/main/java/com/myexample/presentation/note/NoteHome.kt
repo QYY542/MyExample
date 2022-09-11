@@ -46,7 +46,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun NoteHome(
     viewModel: MyViewModel,
-    onClick: (item: MyData) -> Unit
+    onClick: (item: MyData) -> Unit,
+    sheetState: ModalBottomSheetState,
 ) {
     val state by viewModel.state.collectAsState()
     val refresh by viewModel.refresh.collectAsState()
@@ -59,6 +60,8 @@ fun NoteHome(
 
     var taskToDo = state.filter {
         !it.complete && it.date == constant.selectTime
+    }.sortedBy {
+        it.status
     }
     var taskCompleted = state.filter {
         it.complete && it.date == constant.selectTime
@@ -68,12 +71,17 @@ fun NoteHome(
     LaunchedEffect(key1 = refresh) {
         taskToDo = state.filter {
             !it.complete && it.date == constant.selectTime
+        }.sortedBy {
+            it.status
         }
         taskCompleted = state.filter {
             it.complete && it.date == constant.selectTime
         }
     }
 
+    LaunchedEffect(key1 = sheetState.isVisible) {
+        showDataPicker = false
+    }
 
     Scaffold(
         backgroundColor = ColorBACK,
@@ -147,7 +155,9 @@ fun NoteHome(
                     }
 
                     if (showIncompleted) {
-                        itemsIndexed(taskToDo) { index, item ->
+                        itemsIndexed(taskToDo.sortedBy {
+                            it.status
+                        }) { index, item ->
                             NoteCard(
                                 modifier = Modifier.padding(12.dp, 0.dp),
                                 item = item,

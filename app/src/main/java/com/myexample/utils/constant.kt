@@ -6,6 +6,7 @@ object constant {
     var selectTime = currentTime.otherday(0)
     var selectId: Int? = null
     var onAddButton: Boolean = true
+    var onAddButtonChange: Int = 1
     var inSheet: Boolean = false
     var isChange: Boolean = false
 }

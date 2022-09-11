@@ -28,9 +28,11 @@ import com.myexample.data.MyData.MyData
 import com.myexample.presentation.ui.theme.Gray
 import com.myexample.presentation.ui.theme.Red
 import com.myexample.utils.constant
+import com.myexample.utils.constant.onAddButtonChange
 import com.myexample.utils.currentTime
 import com.myexample.utils.vibrate
 import com.myexample.utils.vibrate_2
+import kotlinx.coroutines.delay
 
 /*
   **Created by 24606 at 13:59 2022.
@@ -50,7 +52,7 @@ fun NoteCard(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(25.dp),
-        elevation = 8.dp
+        elevation = 6.dp
     ) {
         Column(
             modifier = Modifier
@@ -59,6 +61,7 @@ fun NoteCard(
                         onClick(MyData())
                         onClick(item)
                         constant.onAddButton = false
+                        onAddButtonChange++
                     },
                     onDoubleClick = {
                         vibrate_2(context)
@@ -132,14 +135,22 @@ fun NoteCard(
 
 
                 }
-
+                var doubleClick by remember {
+                    mutableStateOf(0)
+                }
+                LaunchedEffect(key1 = doubleClick) {
+                    delay(300)
+                    doubleClick = 0
+                }
                 Row(verticalAlignment = Alignment.CenterVertically) {
 
                     IconButton(onClick = {
-
-                        vibrate_2(context)
-                        item.id?.let { viewModel.deleteById(it) }
-
+                        doubleClick++
+                        vibrate(context)
+                        if (doubleClick % 2 == 0) {
+                            vibrate_2(context)
+                            item.id?.let { viewModel.deleteById(it) }
+                        }
 
                     }, modifier = Modifier.size(30.dp)) {
 
@@ -157,7 +168,12 @@ fun NoteCard(
 
             if (item.detail.isNotBlank()) {
                 Spacer(Modifier.height(8.dp))
-                MyDetialText(text = item.detail, complete = complete)
+                Row(Modifier.fillMaxWidth()) {
+                    Spacer(Modifier.width(8.dp))
+                    MyDetialText(text = item.detail, complete = complete)
+                    Spacer(Modifier.height(8.dp))
+                }
+
 
             }
 
@@ -191,7 +207,7 @@ fun MyDetialText(
         text = text,
         style = MaterialTheme.typography.body2,
         fontSize = 15.sp,
-        maxLines = 2,
+        maxLines = 3,
         textDecoration = if (!complete) TextDecoration.LineThrough else null,
         overflow = TextOverflow.Ellipsis
     )

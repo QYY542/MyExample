@@ -36,6 +36,7 @@ import com.myexample.presentation.ui.theme.ColorBACK
 import com.myexample.utils.constant
 import com.myexample.utils.constant.inSheet
 import com.myexample.utils.constant.isChange
+import com.myexample.utils.constant.onAddButtonChange
 import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
 
@@ -183,8 +184,8 @@ fun MyScreen(
     val focusManager = LocalFocusManager.current
     LaunchedEffect(key1 = sheetState.isVisible) {
         if (!sheetState.isVisible) {
-            kc?.hide()
             inSheet = false
+            kc?.hide()
             focusManager.clearFocus()
         } else {
             inSheet = true
@@ -285,6 +286,7 @@ fun MyScreen(
 //                            ifAddNewMission = !ifAddNewMission
                             item = MyData()
                             constant.onAddButton = true
+                            onAddButtonChange++
 
                             coroutineScope.launch {
                                 if (sheetState.isVisible) {

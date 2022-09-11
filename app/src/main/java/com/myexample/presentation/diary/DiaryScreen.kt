@@ -46,6 +46,7 @@ import com.myexample.presentation.ui.theme.Red
 import com.myexample.utils.constant
 import com.myexample.utils.vibrate
 import com.myexample.utils.vibrate_2
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /*
@@ -100,8 +101,6 @@ fun DirayHome(
             )
         }
     ) {
-
-
         Column(Modifier.fillMaxSize()) {
 //            Button(onClick = {
 //                val myDiary = MyDiary()
@@ -127,13 +126,14 @@ fun DirayHome(
                             modifier = Modifier
                                 .animateItemPlacement(),
                             shape = RoundedCornerShape(25.dp),
-                            elevation = 8.dp
+                            elevation = 6.dp
                         ) {
                             Column(
                                 modifier = Modifier
                                     .clickable {
                                         coroutineScope.launch {
                                             constant.onAddButton = false
+                                            constant.onAddButtonChange++
                                             dirayViewModel.id.value = item.id
                                             constant.selectId = item.id
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
@@ -163,14 +163,22 @@ fun DirayHome(
                                         )
                                     }
 
+                                    var doubleClick by remember {
+                                        mutableStateOf(0)
+                                    }
+                                    LaunchedEffect(key1 = doubleClick) {
+                                        delay(300)
+                                        doubleClick = 0
+                                    }
                                     Row(verticalAlignment = Alignment.CenterVertically) {
 
                                         androidx.compose.material3.IconButton(onClick = {
-
-                                            vibrate_2(context)
-                                            item.id?.let { dirayViewModel.deleteById(it) }
-
-
+                                            doubleClick++
+                                            vibrate(context)
+                                            if (doubleClick % 2 == 0) {
+                                                vibrate_2(context)
+                                                item.id?.let { dirayViewModel.deleteById(it) }
+                                            }
                                         }, modifier = Modifier.size(30.dp)) {
 
                                             Icon(
@@ -187,13 +195,17 @@ fun DirayHome(
                                 }
                                 if (item.detail.isNotBlank()) {
                                     Spacer(Modifier.height(3.dp))
-                                    Text(
-                                        item.detail,
-                                        style = MaterialTheme.typography.body2,
-                                        fontSize = 15.sp,
-                                        maxLines = 3,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
+                                    Row(Modifier.fillMaxWidth()) {
+                                        Spacer(Modifier.width(8.dp))
+                                        Text(
+                                            item.detail,
+                                            style = MaterialTheme.typography.body2,
+                                            fontSize = 15.sp,
+                                            maxLines = 3,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        Spacer(Modifier.height(8.dp))
+                                    }
                                 }
                                 Spacer(Modifier.height(3.dp))
                                 Text(

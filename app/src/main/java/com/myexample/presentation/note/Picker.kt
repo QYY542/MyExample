@@ -24,11 +24,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.myexample.R
+import com.myexample.presentation.ui.theme.Gray
+import com.myexample.presentation.ui.theme.LightGray
+import com.myexample.utils.constant
+import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
@@ -258,7 +267,12 @@ private fun Label(
         modifier = modifier
             .height(itemHeight)
     ) {
-        Text(text = text, modifier = Modifier.align(Alignment.Center), color = color)
+        Text(
+            text = text,
+            modifier = Modifier.align(Alignment.Center),
+            color = color,
+            fontSize = 14.sp
+        )
     }
 }
 
@@ -413,22 +427,25 @@ fun DatePicker(
         Modifier
             .fillMaxWidth()
             .padding(top = 4.dp)
-            .background(Color.White)
-            .clip(RoundedCornerShape(10.dp))
-        ,
+            .clip(RoundedCornerShape(30.dp))
+            .background(LightGray),
     ) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = title)
-            Row() {
-                Button(onClick = { onDismiss(true, selectYear, selectMonth, selectDay.value) }) {
-                    Text(text = "确定")
-                }
-                Button(onClick = { onDismiss(false, 0, 0, 0) }) {
-                    Text(text = "取消")
-                }
-            }
-        }
+
 //        { onDismiss(false, 0, 0, 0) }
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(horizontalArrangement = Arrangement.Center) {
+
+                androidx.compose.material3.Text(
+                    text = "select date",
+                    fontFamily = FontFamily(Font(R.font.rubik_bold)),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+
+            }
+            Spacer(modifier = Modifier.height(6.dp))
+        }
         DateWheel(selectYear, selectMonth, selectDay) { index, value ->
             when (index) {
                 0 -> selectYear = value
@@ -436,6 +453,37 @@ fun DatePicker(
                 2 -> selectDay.value = value
             }
         }
+
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Button(
+                onClick = { onDismiss(true, selectYear, selectMonth, selectDay.value) },
+                modifier = Modifier
+                    .width(250.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                shape = RoundedCornerShape(15.dp)
+            ) {
+                Text(text = "OK")
+            }
+            Button(
+                onClick = {
+                    onDismiss(
+                        false,
+                        currentTime.year(),
+                        currentTime.month(),
+                        currentTime.day()
+                    )
+                },
+                modifier = Modifier
+                    .width(250.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                shape = RoundedCornerShape(15.dp)
+            ) {
+                Text(text = "Cancel")
+            }
+        }
+
+
     }
 }
 

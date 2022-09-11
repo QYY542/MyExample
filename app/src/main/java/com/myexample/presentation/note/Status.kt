@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
+import com.mhss.app.mybrain.presentation.tasks.Priority
 import com.myexample.R
 import com.myexample.presentation.diary.awesome
 import com.myexample.presentation.diary.bad
@@ -21,6 +22,24 @@ enum class Status(@DrawableRes val icon: Int, val color: Color, val title: Strin
     INCOMPLETED_ORANGE(R.drawable.ic_imcompleted, Orange, incompleted_orange, 3),
     INCOMPLETED_GREEN(R.drawable.ic_imcompleted, Green, incompeted_green, 2),
     COMPLETED(R.drawable.ic_completed, Gray, completed, 1),
+}
+
+fun Status.toPriority(): Priority {
+    when (title) {
+        incompleted_red -> {
+            return Priority.HIGH
+        }
+        incompleted_orange -> {
+            return Priority.MEDIUM
+        }
+        incompeted_green -> {
+            return Priority.LOW
+        }
+        completed -> {
+            return Priority.LOW
+        }
+    }
+    return Priority.LOW
 }
 
 const val incompleted_red = "incompleted_red"

@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.ModalBottomSheetState
@@ -22,9 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,7 +96,11 @@ fun DiaryDetail(
     }
 
 
-    LaunchedEffect(key1 = constant.selectId, key2 = constant.onAddButton) {
+    LaunchedEffect(
+        key1 = constant.selectId,
+        key2 = constant.onAddButton,
+        key3 = constant.onAddButtonChange
+    ) {
         if (constant.onAddButton) {
             item = MyDiary()
             id = item.id
@@ -107,12 +117,22 @@ fun DiaryDetail(
         }
     }
 
+    LaunchedEffect(key1 = sheetState.isVisible) {
+        if (!sheetState.isVisible) {
+            id = null
+            title = ""
+            detail = ""
+            date = currentTime.formatTime()
+            mood = Mood.AWESOME
+        }
 
+    }
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .defaultMinSize(minHeight = 1.dp)
             .padding(horizontal = 16.dp, vertical = 24.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         SheetHandle(Modifier.align(Alignment.CenterHorizontally))
 
@@ -182,6 +202,7 @@ fun DiaryDetail(
             ),
             maxLines = 1,
             textStyle = MaterialTheme.typography.titleLarge,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(25.dp)
         )
@@ -205,7 +226,7 @@ fun DiaryDetail(
             modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(25.dp)
         )
-
+        Spacer(modifier = Modifier.height(400.dp))
 
     }
 }
