@@ -1,13 +1,10 @@
 package com.myexample.presentation.diary
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.ModalBottomSheetState
@@ -42,6 +39,7 @@ import com.mhss.app.mybrain.presentation.tasks.getStatus
 import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
+import com.myexample.presentation.ui.theme.Purple
 import com.myexample.utils.constant
 import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
@@ -100,6 +98,7 @@ fun DiaryDetail(
             title = item.title
             detail = item.detail
             date = currentTime.formatTime()
+//            date = item.date
             mood = item.mood
         } else {
             id = item.id
@@ -159,15 +158,19 @@ fun DiaryDetail(
                     }
                     diaryViewModel.onRefresh()
                 }, modifier = Modifier
-                    .height(30.dp),
-                shape = RoundedCornerShape(10.dp)
+                    .height(30.dp)
+                    .width(90.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Purple)
             ) {
                 androidx.compose.material.Text(
                     text = "Add"
                 )
             }
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(
+            Modifier.height(16.dp)
+        )
 
         EntryMoodSection(
             currentMood = mood,
@@ -175,7 +178,7 @@ fun DiaryDetail(
             diaryViewModel.onRefresh()
             mood = it
             item.mood = mood
-            item.date = currentTime.formatTime()
+//            item.date = currentTime.formatTime()
             item.dateDetail = currentTime.formatTimeDetail()
             diaryViewModel.update(item)
             diaryViewModel.onRefresh()
@@ -188,7 +191,7 @@ fun DiaryDetail(
                 diaryViewModel.onRefresh()
                 title = it
                 item.title = it
-                item.date = currentTime.formatTime()
+//                item.date = currentTime.formatTime()
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
                 diaryViewModel.onRefresh()
@@ -212,7 +215,7 @@ fun DiaryDetail(
                 diaryViewModel.onRefresh()
                 detail = it
                 item.detail = it
-                item.date = currentTime.formatTime()
+//                item.date = currentTime.formatTime()
                 item.dateDetail = currentTime.formatTimeDetail()
                 diaryViewModel.update(item)
                 diaryViewModel.onRefresh()

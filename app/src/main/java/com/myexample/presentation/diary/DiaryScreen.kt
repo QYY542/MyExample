@@ -195,6 +195,7 @@ fun DirayHome(
                                                 vibrate_2(context)
                                                 item.id?.let { dirayViewModel.deleteById(it) }
                                             }
+                                            dirayViewModel.onRefresh()
                                         }, modifier = Modifier.size(30.dp)) {
 
                                             Icon(

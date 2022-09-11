@@ -14,7 +14,12 @@ import androidx.compose.foundation.text.*
 import androidx.compose.material.*
 import androidx.compose.material.ContentAlpha.high
 import androidx.compose.material.ContentAlpha.medium
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -57,6 +62,7 @@ import com.myexample.presentation.note.toPriority
 import com.myexample.presentation.test.CursorSelectionBehaviour
 import com.myexample.presentation.ui.theme.Green
 import com.myexample.presentation.ui.theme.Orange
+import com.myexample.presentation.ui.theme.Purple
 import com.myexample.presentation.ui.theme.Red
 import com.myexample.utils.constant
 import com.myexample.utils.currentTime
@@ -225,8 +231,10 @@ fun AddTaskBottomSheetContentNote(
                         sheetState.hide()
                     }
                 }, modifier = Modifier
-                    .height(30.dp),
-                shape = RoundedCornerShape(10.dp)
+                    .height(30.dp)
+                    .width(90.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Purple)
             ) {
                 Text(
                     text = "Add"
