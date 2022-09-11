@@ -4,30 +4,28 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
+import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.presentation.diary.DirayViewModel
@@ -36,10 +34,7 @@ import com.myexample.utils.vibrate
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.ui.theme.ColorBACK
 import com.myexample.utils.constant
-import com.myexample.utils.constant.inSheet
-import com.myexample.utils.constant.isChange
 import com.myexample.utils.constant.onAddButtonChange
-import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
 
 /*
@@ -249,10 +244,12 @@ fun MyScreen(
                             .offset(animdpOff_x_l, -localY)
                             .padding(animPD_1 - 40.dp)
                     ) {
-//                Image(
-//                    painter = painterResource(R.drawable.ic_news),
-//                    contentDescription = "Camera",
-//                )
+                        Image(
+                            painter = painterResource(R.drawable.ic_task),
+                            contentDescription = "Camera",
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier.size(30.dp)
+                        )
                     }
                     //mid
                     FloatingActionButton(
@@ -265,10 +262,12 @@ fun MyScreen(
                             .offset(localX, -animdpOff_y_l - localY)
                             .padding(animPD_2 - 40.dp)
                     ) {
-//                Image(
-//                    painter = painterResource(R.drawable.ic_camera),
-//                    contentDescription = "Camera"
-//                )
+                        Image(
+                            painter = painterResource(R.drawable.ic_diary),
+                            contentDescription = "Camera",
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier.size(30.dp)
+                        )
                     }
                     //right
                     FloatingActionButton(
@@ -281,15 +280,18 @@ fun MyScreen(
                             .offset(animdpOff_x_m, -animdpOff_y_m - localY)
                             .padding(animPD_3 - 40.dp)
                     ) {
-//                Image(
-//                    painter = painterResource(R.drawable.ic_home),
-//                    contentDescription = "Camera"
-//                )
+                        Image(
+                            painter = painterResource(R.drawable.ic_target),
+                            contentDescription = "Camera",
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier.size(30.dp)
+                        )
                     }
                     //Big
                     FloatingActionButton(
                         backgroundColor = Color(114, 137, 196),
                         onClick = {
+                            diaryViewModel.onRefresh()
 //                            ifAddNewMission = !ifAddNewMission
                             item = MyData()
                             constant.onAddButton = true
@@ -436,10 +438,12 @@ fun MyScreen(
                                 )
                             }) {
                         /* FAB content */
-//                Image(
-//                    painter = painterResource(R.drawable.ic_voice),
-//                    contentDescription = "Camera"
-//                )
+                        Image(
+                            painter = painterResource(R.drawable.ic_add),
+                            contentDescription = "Camera",
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier.size(40.dp)
+                        )
                     }
                 }
 

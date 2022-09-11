@@ -94,7 +94,7 @@ class MyViewModel @Inject constructor(
     }
 
     //全局
-    private val _navController_Number = mutableStateOf(1)
+    private val _navController_Number = mutableStateOf(0)
     val navController_Number: State<Int> = _navController_Number
 
     fun setNavControllerNumber(num: Int) {

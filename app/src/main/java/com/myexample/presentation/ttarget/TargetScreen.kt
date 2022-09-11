@@ -12,6 +12,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -71,9 +72,12 @@ fun TargetScreen(
             )
         }
     ) {
-        Column(Modifier.fillMaxSize()) {
-            PersonalStatusList(state, targetViewModel)
-            AnnuallyStatusList(state, targetViewModel)
+//        Column(Modifier.fillMaxSize()) {
+//            PersonalStatusList(state, targetViewModel)
+//            AnnuallyStatusList(state, targetViewModel)
+//        }
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(text = "开发中...", modifier = Modifier.align(Alignment.Center))
         }
     }
 }
