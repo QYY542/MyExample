@@ -10,6 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.myexample.R
@@ -35,38 +39,42 @@ fun SplashScreen(
         mutableStateOf(true)
     }
     var speed by remember {
-        mutableStateOf(2f)
+        mutableStateOf(6f)
     }
     var alpha by remember {
-        mutableStateOf(1f)
+        mutableStateOf(true)
     }
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash_2))
     val progress by animateLottieCompositionAsState(
         composition = composition,
         speed = speed,
         iterations = 1,
-        cancellationBehavior = LottieCancellationBehavior.Immediately,
+        cancellationBehavior = LottieCancellationBehavior.OnIterationFinish,
         isPlaying = replay,
         restartOnPlay = false
     )
     Box(Modifier.fillMaxSize()) {
-//        Text(text = "Hello", modifier = Modifier.align(Alignment.Center))
-        LottieAnimation(
-            composition = composition,
-            progress = progress,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .alpha(alpha)
+        Text(
+            text = "Hello ToDo",
+            fontFamily = FontFamily(Font(R.font.rubik_bold)),
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Center)
         )
+//            LottieAnimation(
+//                composition = composition,
+//                progress = progress,
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .align(Alignment.Center)
+//            )
     }
 
     coroutineScope.launch {
         delay(1000)
         replay = false
-        alpha = 0f
-//        delay(20)
+        alpha = false
         navController.navigate("note_screen")
         navController.enableOnBackPressed(false)
     }

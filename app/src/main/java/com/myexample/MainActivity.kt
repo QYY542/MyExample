@@ -46,8 +46,8 @@ class MainActivity : ComponentActivity() {
 
                         Column(Modifier.fillMaxSize()) {
                             Spacer(modifier = Modifier.height(30.dp))
-                            MyScreen(viewModel, diaryViewModel)
-//                            TestHome(viewModel)
+//                            MyScreen(viewModel, diaryViewModel)
+                            TestHome(viewModel)
                         }
 
                     }

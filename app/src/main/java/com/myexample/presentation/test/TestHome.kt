@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import com.myexample.R
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.test.naked_eye_3d.My3DTest
+import com.myexample.presentation.test.roomtest.MyRoomTest
 import com.myexample.utils.currentTime
 import java.util.*
 
@@ -28,7 +29,7 @@ fun TestHome(
     viewModel: MyViewModel
 ) {
     //测试Room数据库连接
-//    MyRoomTest(viewModel)
+    MyRoomTest(viewModel)
 
     //测试3D效果
 //    My3DTest(viewModel)
@@ -37,9 +38,9 @@ fun TestHome(
     //测试时间
 //    timeTest()
 
-    AutofocusTextFieldExample(
-        "123"
-    )
+//    AutofocusTextFieldExample(
+//        "123"
+//    )
 }
 
 enum class CursorSelectionBehaviour {
