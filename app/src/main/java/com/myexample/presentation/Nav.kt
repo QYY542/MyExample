@@ -20,6 +20,7 @@ import com.myexample.presentation.note.NoteScreen
 import com.myexample.presentation.splash.SplashScreen
 import com.myexample.presentation.ttarget.TargetScreen
 import com.myexample.presentation.note.MyViewModel
+import com.myexample.presentation.test.roomtest.SplashScreen2
 
 /*
   **Created by 24606 at 23:39 2022.
@@ -40,7 +41,7 @@ fun Nav(
         startDestination = "splash_screen",
     ) {
         composable("splash_screen") {
-            SplashScreen(navController, viewModel)
+            SplashScreen2(navController, viewModel)
         }
         composable("note_screen") {
             NoteScreen(navController, viewModel, onClick = {

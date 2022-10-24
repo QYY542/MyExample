@@ -42,13 +42,20 @@ import kotlinx.coroutines.delay
 @Composable
 fun NoteCard(
     modifier: Modifier,
-    item: MyData,
+    itemi: MyData,
     complete: Boolean,
     homeScreen: Boolean,
     viewModel: MyViewModel,
     onClick: (item: MyData) -> Unit
 ) {
     val context = LocalContext.current
+    var item by remember {
+        mutableStateOf(itemi)
+    }
+
+    var status by remember {
+        mutableStateOf(item.status)
+    }
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(25.dp),
@@ -65,22 +72,20 @@ fun NoteCard(
                     },
                     onDoubleClick = {
                         vibrate_2(context)
-                        val myData = item
-                        myData.complete = complete
-                        if (myData.complete) {
-                            myData.status = Status.COMPLETED
+                        item.complete = complete
+                        if (item.complete) {
+                            item.status = Status.COMPLETED
                         } else {
-                            myData.status = Status.INCOMPLETED_GREEN
+                            item.status = Status.INCOMPLETED_GREEN
                         }
 
-                        viewModel.update(myData)
+                        viewModel.insert(item)
                     },
                     onLongClick = {
                         vibrate(context)
-                        val myData = item
 //                    myData.importance = !myData.importance
                         if (complete) {
-                            myData.status = when (myData.status) {
+                            item.status = when (item.status) {
                                 Status.INCOMPLETED_GREEN -> {
                                     Status.INCOMPLETED_ORANGE
                                 }
@@ -94,7 +99,7 @@ fun NoteCard(
                                     Status.INCOMPLETED_GREEN
                                 }
                             }
-                            viewModel.update(myData)
+                            viewModel.insert(item)
                         }
 
                     }
@@ -109,21 +114,36 @@ fun NoteCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = {
                         vibrate_2(context)
-                        val myData = item
-                        myData.complete = complete
-                        if (myData.complete) {
-                            myData.status = Status.COMPLETED
+                        item.complete = complete
+                        if (item.complete) {
+                            item.status = Status.COMPLETED
                         } else {
-                            myData.status = Status.INCOMPLETED_GREEN
+                            item.status = Status.INCOMPLETED_GREEN
                         }
-                        viewModel.update(myData)
+
+                        status = when (status) {
+                            Status.INCOMPLETED_GREEN -> {
+                                Status.INCOMPLETED_ORANGE
+                            }
+                            Status.INCOMPLETED_ORANGE -> {
+                                Status.INCOMPLETED_RED
+                            }
+                            Status.INCOMPLETED_RED -> {
+                                Status.INCOMPLETED_GREEN
+                            }
+                            else -> {
+                                Status.INCOMPLETED_GREEN
+                            }
+                        }
+                        item.status = status
+                        viewModel.insert(item)
 
                     }, modifier = Modifier.size(30.dp)) {
 
                         Icon(
-                            painterResource(item.status.icon),
-                            item.status.title,
-                            tint = item.status.color,
+                            painterResource(status.icon),
+                            status.title,
+                            tint = status.color,
                             modifier = Modifier.size(30.dp)
                         )
 
@@ -162,7 +182,6 @@ fun NoteCard(
                         )
 
                     }
-
                 }
             }
 
@@ -192,7 +211,7 @@ fun MyTitleText(
         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
         fontSize = 18.sp,
         maxLines = 1,
-        textDecoration = if (!complete) TextDecoration.LineThrough else null,
+        textDecoration = if (complete) TextDecoration.LineThrough else null,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.fillMaxWidth(0.8f)
     )
@@ -208,7 +227,7 @@ fun MyDetialText(
         style = MaterialTheme.typography.body2,
         fontSize = 15.sp,
         maxLines = 3,
-        textDecoration = if (!complete) TextDecoration.LineThrough else null,
+        textDecoration = if (complete) TextDecoration.LineThrough else null,
         overflow = TextOverflow.Ellipsis
     )
 }

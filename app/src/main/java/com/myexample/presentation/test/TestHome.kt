@@ -1,9 +1,10 @@
 package com.myexample.presentation.test
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -12,10 +13,13 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.myexample.R
 import com.myexample.presentation.note.MyViewModel
 import com.myexample.presentation.test.naked_eye_3d.My3DTest
 import com.myexample.presentation.test.roomtest.MyRoomTest
+import com.myexample.presentation.test.roomtest.NavTest
 import com.myexample.utils.currentTime
 import java.util.*
 
@@ -24,12 +28,45 @@ import java.util.*
 */
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TestHome(
     viewModel: MyViewModel
 ) {
     //测试Room数据库连接
-    MyRoomTest(viewModel)
+    val navController = rememberNavController()
+//    MyRoomTest(viewModel)
+    Scaffold(bottomBar = {
+        Row() {
+            Button(onClick = { navController.navigate("note_screen") }) {
+                Text(text = "note_screen")
+            }
+            Button(onClick = { navController.navigate("diary_screen") }) {
+                Text(text = "diary_screen")
+            }
+            Button(onClick = { navController.navigate("target_screen") }) {
+                Text(text = "target_screen")
+            }
+        }
+    }) {
+        Column(Modifier.fillMaxSize()) {
+            NavTest(navController = navController, viewModel = viewModel)
+            Row() {
+                Button(onClick = { navController.navigate("note_screen") }) {
+                    Text(text = "note_screen")
+                }
+                Button(onClick = { navController.navigate("diary_screen") }) {
+                    Text(text = "diary_screen")
+                }
+                Button(onClick = { navController.navigate("target_screen") }) {
+                    Text(text = "target_screen")
+                }
+            }
+
+        }
+    }
+
+
 
     //测试3D效果
 //    My3DTest(viewModel)

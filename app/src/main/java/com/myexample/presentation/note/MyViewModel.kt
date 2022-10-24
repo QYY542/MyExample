@@ -114,6 +114,8 @@ class MyViewModel @Inject constructor(
 
     val date = mutableStateOf("")
 
+    val status = mutableStateOf(Status.INCOMPLETED_GREEN)
+
 
 }
 

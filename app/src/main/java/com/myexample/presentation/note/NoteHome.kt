@@ -160,7 +160,7 @@ fun NoteHome(
                         }) { index, item ->
                             NoteCard(
                                 modifier = Modifier.padding(12.dp, 0.dp),
-                                item = item,
+                                itemi = item,
                                 complete = true,
                                 homeScreen = true,
                                 viewModel = viewModel,
@@ -196,7 +196,7 @@ fun NoteHome(
                         itemsIndexed(taskCompleted) { index, item ->
                             NoteCard(
                                 modifier = Modifier.padding(12.dp, 0.dp),
-                                item = item,
+                                itemi = item,
                                 complete = false,
                                 homeScreen = true,
                                 viewModel = viewModel,
