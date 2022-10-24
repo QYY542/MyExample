@@ -1,15 +1,9 @@
-package com.myexample.presentation.note
+package com.myexample.presentation.Note
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Blue
 import com.mhss.app.mybrain.presentation.tasks.Priority
 import com.myexample.R
-import com.myexample.presentation.diary.awesome
-import com.myexample.presentation.diary.bad
-import com.myexample.presentation.diary.good
-import com.myexample.presentation.diary.okay
 import com.myexample.presentation.ui.theme.*
 
 

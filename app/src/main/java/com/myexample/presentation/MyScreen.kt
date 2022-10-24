@@ -27,13 +27,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
+import com.myexample.MainViewModel
 import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
-import com.myexample.presentation.diary.DirayViewModel
+import com.myexample.presentation.Diary.DirayViewModel
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
-import com.myexample.presentation.note.MyViewModel
+import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.target.StatusViewModel
 import com.myexample.presentation.ui.theme.ColorBACK
 import com.myexample.utils.constant
 import com.myexample.utils.constant.onAddButtonChange
@@ -53,13 +55,15 @@ val localY = 60.dp
 )
 @Composable
 fun MyScreen(
-    viewModel: MyViewModel,
+    mainViewModel: MainViewModel,
+    noteViewModel: NoteViewModel,
+    statusViewModel: StatusViewModel,
     diaryViewModel: DirayViewModel
 ) {
     //基本
     val context = LocalContext.current
     val navController = rememberNavController()
-    val navController_Number by viewModel.navController_Number
+    val navController_Number by mainViewModel.navController_Number
     var coroutineScope = rememberCoroutineScope()
     val kc = LocalSoftwareKeyboardController.current
     //语音动画
@@ -293,8 +297,6 @@ fun MyScreen(
                     FloatingActionButton(
                         backgroundColor = Color(114, 137, 196),
                         onClick = {
-                            diaryViewModel.onRefresh()
-//                            ifAddNewMission = !ifAddNewMission
                             item = MyData()
                             constant.onAddButton = true
                             onAddButtonChange++
@@ -463,7 +465,8 @@ fun MyScreen(
 
                     AddTaskBottomSheetContent(
                         sheetState = sheetState,
-                        viewModel = viewModel,
+                        mainViewModel = mainViewModel,
+                        noteViewModel = noteViewModel,
                         diaryViewModel = diaryViewModel,
                         item = item,
                         itemDiary = itemDiary,
@@ -472,33 +475,43 @@ fun MyScreen(
 
                 }) {
                 // Screen content
-                Nav(navController, viewModel, diaryViewModel, sheetState, onClick = {
-                    //赋值
-                    viewModel.id.value = it.id!!
-                    viewModel.date.value = it.date
-                    viewModel.title.value = it.title
-                    viewModel.detail.value = if (it.detail == "") "●" else it.detail
-                    viewModel.complete.value = it.complete
-                    viewModel.status.value = it.status
+                Nav(navController,
+                    mainViewModel,
+                    noteViewModel,
+                    statusViewModel,
+                    diaryViewModel,
+                    sheetState,
+                    onClick = {
+                        //赋值
+                        noteViewModel.id.value = it.id!!
+                        noteViewModel.date.value = it.date
+                        noteViewModel.title.value = it.title
+                        noteViewModel.detail.value = if (it.detail == "") "●" else it.detail
+                        noteViewModel.complete.value = it.complete
+                        noteViewModel.status.value = it.status
 //                    if (it.detail == "") {
 //                        viewModel.detail.value = "●"
 //                    }
-                    viewModel.detail_2.value =
-                        TextFieldValue(text = it.detail, selection = TextRange(it.detail.length))
+                        noteViewModel.detail_2.value =
+                            TextFieldValue(
+                                text = it.detail,
+                                selection = TextRange(it.detail.length)
+                            )
 
-                    //展示
-                    coroutineScope.launch {
-                        if (sheetState.isVisible) {
-                            sheetState.animateTo(ModalBottomSheetValue.Hidden)
-                        } else {
-                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
-                        }
+                        //展示
+                        coroutineScope.launch {
+                            if (sheetState.isVisible) {
+                                sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                            } else {
+                                sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                            }
 //                        sheetState.show()
-                    }
+                        }
 
-                }, onClickDiary = {
-                    itemDiary = it
-                })
+                    },
+                    onClickDiary = {
+                        itemDiary = it
+                    })
             }
         }
 

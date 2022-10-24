@@ -2,7 +2,6 @@ package com.myexample.presentation.target
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myexample.data.MyDiary.MyDiary
 import com.myexample.data.MyTarget.MyTarget
 import com.myexample.repository.MyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,7 @@ import javax.inject.Inject
 */
 
 @HiltViewModel
-class TargetViewModel @Inject constructor(
+class StatusViewModel @Inject constructor(
     private val myRepository: MyRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<List<MyTarget>>(listOf())

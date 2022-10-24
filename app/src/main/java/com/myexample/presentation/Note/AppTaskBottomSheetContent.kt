@@ -1,23 +1,13 @@
 package com.mhss.app.mybrain.presentation.tasks
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.content.Intent
-import android.provider.SyncStateContract
-import android.renderscript.RenderScript
-import android.service.quicksettings.TileService
-import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.*
 import androidx.compose.material.*
-import androidx.compose.material.ContentAlpha.high
-import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -26,71 +16,57 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.InputMode.Companion.Keyboard
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalTextInputService
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
+import com.myexample.MainViewModel
 
-import com.myexample.MainActivity
 import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
-import com.myexample.presentation.diary.DiaryDetail
-import com.myexample.presentation.diary.DirayViewModel
-import com.myexample.presentation.note.MyViewModel
-import com.myexample.presentation.note.Status
-import com.myexample.presentation.note.toPriority
-import com.myexample.presentation.test.CursorSelectionBehaviour
+import com.myexample.presentation.Diary.DiaryDetail
+import com.myexample.presentation.Diary.DirayViewModel
+import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Note.Status
 import com.myexample.presentation.ui.theme.Green
 import com.myexample.presentation.ui.theme.Orange
 import com.myexample.presentation.ui.theme.Purple
 import com.myexample.presentation.ui.theme.Red
-import com.myexample.utils.constant
 import com.myexample.utils.currentTime
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.concurrent.Task
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddTaskBottomSheetContent(
     sheetState: ModalBottomSheetState,
-    viewModel: MyViewModel,
+    mainViewModel: MainViewModel,
+    noteViewModel: NoteViewModel,
     diaryViewModel: DirayViewModel,
     item: MyData,
     itemDiary: MyDiary,
     navController: NavController
 ) {
 
-    when (viewModel.navController_Number.value) {
+    when (mainViewModel.navController_Number.value) {
         0 -> {
-            AddTaskBottomSheetContentNote(sheetState, viewModel, item)
+            AddTaskBottomSheetContentNote(sheetState, noteViewModel, item)
         }
         1 -> {
-            AddTaskBottomSheetContentNote(sheetState, viewModel, item)
+            AddTaskBottomSheetContentNote(sheetState, noteViewModel, item)
         }
         2 -> {
-            AddTaskBottomSheetContentNote(sheetState, viewModel, item)
+            AddTaskBottomSheetContentNote(sheetState, noteViewModel, item)
         }
         3 -> {
             DiaryDetail(
@@ -107,7 +83,7 @@ fun AddTaskBottomSheetContent(
 @Composable
 fun AddTaskBottomSheetContentNote(
     sheetState: ModalBottomSheetState,
-    viewModel: MyViewModel,
+    viewModel: NoteViewModel,
     item: MyData
 ) {
 
@@ -201,29 +177,6 @@ fun AddTaskBottomSheetContentNote(
             }
         }
         Spacer(Modifier.height(16.dp))
-
-        //数据
-
-
-//        OutlinedTextField(
-//            value = title,
-//            onValueChange = { title = it },
-//            label = { Text(text = "title") },
-//            shape = RoundedCornerShape(15.dp),
-//            textStyle = TextStyle(fontSize = 18.sp),
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        )
-//        OutlinedTextField(
-//            value = detail,
-//            onValueChange = { detail = it },
-//            label = { Text(text = "detail") },
-//            shape = RoundedCornerShape(15.dp),
-//            textStyle = TextStyle(fontSize = 15.sp),
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(150.dp)
-//        )
 
         //title
         OutlinedTextField(

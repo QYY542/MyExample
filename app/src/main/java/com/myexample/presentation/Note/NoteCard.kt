@@ -1,35 +1,24 @@
-package com.myexample.presentation.note
+package com.myexample.presentation.Note
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
-import androidx.compose.material3.BottomAppBarDefaults.FloatingActionButtonElevation.elevation
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myexample.R
 import com.myexample.data.MyData.MyData
-import com.myexample.presentation.ui.theme.Gray
 import com.myexample.presentation.ui.theme.Red
-import com.myexample.utils.constant
-import com.myexample.utils.constant.onAddButtonChange
-import com.myexample.utils.currentTime
 import com.myexample.utils.vibrate
 import com.myexample.utils.vibrate_2
 import kotlinx.coroutines.delay
@@ -38,24 +27,27 @@ import kotlinx.coroutines.delay
   **Created by 24606 at 13:59 2022.
 */
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun NoteCard(
     modifier: Modifier,
-    itemi: MyData,
-    complete: Boolean,
-    homeScreen: Boolean,
-    viewModel: MyViewModel,
+    item: MyData,
+    viewModel: NoteViewModel,
     onClick: (item: MyData) -> Unit
 ) {
     val context = LocalContext.current
-    var item by remember {
-        mutableStateOf(itemi)
-    }
+    var coroutineScope = rememberCoroutineScope()
 
-    var status by remember {
-        mutableStateOf(item.status)
-    }
+    val myData = MyData(
+        item.id,
+        item.title,
+        item.detail,
+        item.importance,
+        item.complete,
+        item.date,
+        item.status
+    )
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(25.dp),
@@ -65,42 +57,39 @@ fun NoteCard(
             modifier = Modifier
                 .combinedClickable(
                     onClick = {
-                        onClick(MyData())
+                        //逻辑在外面写，执行在这里
                         onClick(item)
-                        constant.onAddButton = false
-                        onAddButtonChange++
                     },
                     onDoubleClick = {
                         vibrate_2(context)
-                        item.complete = complete
-                        if (item.complete) {
-                            item.status = Status.COMPLETED
+
+                        myData.complete = !myData.complete
+                        if (myData.complete) {
+                            myData.status = Status.COMPLETED
                         } else {
-                            item.status = Status.INCOMPLETED_GREEN
+                            myData.status = Status.INCOMPLETED_GREEN
                         }
 
-                        viewModel.insert(item)
+                        viewModel.insert(myData)
                     },
                     onLongClick = {
                         vibrate(context)
-//                    myData.importance = !myData.importance
-                        if (complete) {
-                            item.status = when (item.status) {
-                                Status.INCOMPLETED_GREEN -> {
-                                    Status.INCOMPLETED_ORANGE
-                                }
-                                Status.INCOMPLETED_ORANGE -> {
-                                    Status.INCOMPLETED_RED
-                                }
-                                Status.INCOMPLETED_RED -> {
-                                    Status.INCOMPLETED_GREEN
-                                }
-                                else -> {
-                                    Status.INCOMPLETED_GREEN
-                                }
+                        myData.status = when (myData.status) {
+                            Status.INCOMPLETED_GREEN -> {
+                                Status.INCOMPLETED_ORANGE
                             }
-                            viewModel.insert(item)
+                            Status.INCOMPLETED_ORANGE -> {
+                                Status.INCOMPLETED_RED
+                            }
+                            Status.INCOMPLETED_RED -> {
+                                Status.INCOMPLETED_GREEN
+                            }
+                            else -> {
+                                Status.COMPLETED
+                            }
                         }
+                        viewModel.insert(myData)
+
 
                     }
                 )
@@ -112,38 +101,22 @@ fun NoteCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = {
+                    androidx.compose.material3.IconButton(onClick = {
                         vibrate_2(context)
-                        item.complete = complete
-                        if (item.complete) {
-                            item.status = Status.COMPLETED
+                        myData.complete = !myData.complete
+                        if (myData.complete) {
+                            myData.status = Status.COMPLETED
                         } else {
-                            item.status = Status.INCOMPLETED_GREEN
+                            myData.status = Status.INCOMPLETED_GREEN
                         }
-
-                        status = when (status) {
-                            Status.INCOMPLETED_GREEN -> {
-                                Status.INCOMPLETED_ORANGE
-                            }
-                            Status.INCOMPLETED_ORANGE -> {
-                                Status.INCOMPLETED_RED
-                            }
-                            Status.INCOMPLETED_RED -> {
-                                Status.INCOMPLETED_GREEN
-                            }
-                            else -> {
-                                Status.INCOMPLETED_GREEN
-                            }
-                        }
-                        item.status = status
-                        viewModel.insert(item)
+                        viewModel.insert(myData)
 
                     }, modifier = Modifier.size(30.dp)) {
 
                         Icon(
-                            painterResource(status.icon),
-                            status.title,
-                            tint = status.color,
+                            painterResource(myData.status.icon),
+                            myData.status.title,
+                            tint = myData.status.color,
                             modifier = Modifier.size(30.dp)
                         )
 
@@ -151,7 +124,7 @@ fun NoteCard(
 
                     Spacer(Modifier.width(8.dp))
 
-                    MyTitleText(text = item.title, complete = complete)
+                    MyTitleText(text = myData.title, complete = myData.complete)
 
 
                 }
@@ -164,11 +137,10 @@ fun NoteCard(
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
 
-                    IconButton(onClick = {
+                    androidx.compose.material3.IconButton(onClick = {
                         doubleClick++
-                        vibrate(context)
+                        vibrate_2(context)
                         if (doubleClick % 2 == 0) {
-                            vibrate_2(context)
                             item.id?.let { viewModel.deleteById(it) }
                         }
 
@@ -176,7 +148,7 @@ fun NoteCard(
 
                         Icon(
                             painterResource(R.drawable.ic_delete),
-                            item.status.title,
+                            myData.status.title,
                             tint = Red,
                             modifier = Modifier.size(30.dp)
                         )
@@ -189,14 +161,10 @@ fun NoteCard(
                 Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Spacer(Modifier.width(8.dp))
-                    MyDetialText(text = item.detail, complete = complete)
+                    MyDetialText(text = myData.detail, complete = myData.complete)
                     Spacer(Modifier.height(8.dp))
                 }
-
-
             }
-
-
         }
     }
 }

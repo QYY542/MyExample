@@ -1,10 +1,9 @@
-package com.myexample.presentation.diary
+package com.myexample.presentation.Diary
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.repository.MyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -3,21 +3,18 @@ package com.myexample.presentation.splash
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
+import com.myexample.MainViewModel
 import com.myexample.R
-import com.myexample.presentation.note.MyViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -29,10 +26,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun SplashScreen(
     navController: NavController,
-    viewModel: MyViewModel
+    mainViewModel: MainViewModel
 ) {
 //    viewModel.navController_Number.value = 0
-    viewModel.setNavControllerNumber(0)
+    mainViewModel.setNavControllerNumber(0)
     var coroutineScope = rememberCoroutineScope()
 
     var replay by remember {

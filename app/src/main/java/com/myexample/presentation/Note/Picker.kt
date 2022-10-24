@@ -1,6 +1,5 @@
-package com.myexample.presentation.note
+package com.myexample.presentation.Note
 
-import android.widget.DatePicker
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -11,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material3.Divider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.ProvideTextStyle
@@ -31,15 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.myexample.R
-import com.myexample.presentation.ui.theme.Gray
 import com.myexample.presentation.ui.theme.LightGray
-import com.myexample.utils.constant
 import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
-import java.util.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 

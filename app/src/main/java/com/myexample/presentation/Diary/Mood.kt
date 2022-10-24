@@ -1,7 +1,6 @@
-package com.myexample.presentation.diary
+package com.myexample.presentation.Diary
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.myexample.R
 import com.myexample.presentation.ui.theme.*

@@ -1,11 +1,9 @@
-package com.myexample.presentation.note
+package com.myexample.presentation.Note
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.myexample.data.MyData.MyData
 import com.myexample.repository.MyRepository
@@ -19,7 +17,7 @@ import javax.inject.Inject
 */
 
 @HiltViewModel
-class MyViewModel @Inject constructor(
+class NoteViewModel @Inject constructor(
     private val myRepository: MyRepository
 ) : ViewModel() {
 
@@ -94,14 +92,7 @@ class MyViewModel @Inject constructor(
         _y.value = y
     }
 
-    //全局
-    private val _navController_Number = mutableStateOf(0)
-    val navController_Number: State<Int> = _navController_Number
-
-    fun setNavControllerNumber(num: Int) {
-        _navController_Number.value = num
-    }
-
+    
     //数据
     val id = mutableStateOf<Int?>(0)
 

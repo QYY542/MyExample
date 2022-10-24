@@ -1,12 +1,8 @@
-package com.myexample.presentation.ttarget
+package com.myexample.presentation.Satus
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
@@ -14,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -27,12 +22,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.myexample.MainViewModel
 import com.myexample.R
 import com.myexample.data.MyTarget.MyTarget
-import com.myexample.presentation.note.MyViewModel
-import com.myexample.presentation.target.TargetViewModel
+import com.myexample.presentation.target.StatusViewModel
 import com.myexample.presentation.ui.theme.ColorBACK
-import com.myexample.utils.constant
 
 /*
   **Created by 24606 at 23:39 2022.
@@ -40,15 +34,15 @@ import com.myexample.utils.constant
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun TargetScreen(
+fun StatusScreen(
     navController: NavController,
-    viewModel: MyViewModel,
-    targetViewModel: TargetViewModel = hiltViewModel()
+    mainViewModel: MainViewModel,
+    statusViewModel: StatusViewModel
 ) {
-    viewModel.setNavControllerNumber(2)
+    mainViewModel.setNavControllerNumber(2)
     navController.enableOnBackPressed(false)
 
-    val state = targetViewModel.state.collectAsState()
+    val state = statusViewModel.state.collectAsState()
 
 
     Scaffold(
@@ -86,7 +80,7 @@ fun TargetScreen(
 @Composable
 fun AnnuallyStatusList(
     state: State<List<MyTarget>>,
-    targetViewModel: TargetViewModel = hiltViewModel()
+    statusViewModel: StatusViewModel = hiltViewModel()
 ) {
 
     var id by remember {
@@ -170,7 +164,7 @@ fun AnnuallyStatusList(
 @Composable
 fun PersonalStatusList(
     state: State<List<MyTarget>>,
-    targetViewModel: TargetViewModel = hiltViewModel()
+    statusViewModel: StatusViewModel = hiltViewModel()
 ) {
     val pagerState = rememberPagerState()
     var pageCount by remember {

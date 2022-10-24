@@ -13,14 +13,11 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.myexample.presentation.MyScreen
 import com.myexample.presentation.ui.theme.MyExampleTheme
-import com.myexample.presentation.note.MyViewModel
-import com.myexample.presentation.test.TestHome
+import com.myexample.presentation.Note.NoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.view.WindowCompat
-import androidx.room.util.TableInfo
-import com.myexample.presentation.diary.DirayViewModel
-import com.myexample.utils.constant.inSheet
-import com.myexample.utils.constant.isChange
+import com.myexample.presentation.Diary.DirayViewModel
+import com.myexample.presentation.target.StatusViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -40,13 +37,16 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
+                        val mainViewModel: MainViewModel by viewModels()
 
-                        val viewModel: MyViewModel by viewModels()
+                        val noteViewModel: NoteViewModel by viewModels()
+                        val statusViewModel: StatusViewModel by viewModels()
                         val diaryViewModel: DirayViewModel by viewModels()
+
 
                         Column(Modifier.fillMaxSize()) {
                             Spacer(modifier = Modifier.height(30.dp))
-                            MyScreen(viewModel, diaryViewModel)
+                            MyScreen(mainViewModel, noteViewModel, statusViewModel, diaryViewModel)
 //                            TestHome(viewModel)
                         }
 

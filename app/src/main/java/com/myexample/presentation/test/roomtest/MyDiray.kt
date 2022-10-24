@@ -14,13 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
-import com.myexample.presentation.diary.DirayViewModel
-import com.myexample.presentation.note.MyViewModel
+import com.myexample.presentation.Diary.DirayViewModel
 import kotlinx.coroutines.launch
 
 /*
@@ -40,7 +37,7 @@ fun MyDiray(
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
-        ButtonList2(dirayViewModel,sheetState)
+        ButtonList2(dirayViewModel, sheetState)
         Text(text = "diary")
         var id by remember {
             mutableStateOf("1")
@@ -56,7 +53,7 @@ fun MyDiray(
             sheetShape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
             sheetContent = {
                 Button(onClick = {
-                    val myData = MyDiary(id.toInt(),detail = detail,date=date)
+                    val myData = MyDiary(id.toInt(), detail = detail, date = date)
                     dirayViewModel.insert(myData)
                     coroutineScope.launch {
                         sheetState.hide()
@@ -69,20 +66,21 @@ fun MyDiray(
                 }
                 TextField(value = id, onValueChange = {
                     id = it
-                    val myData = MyDiary(id.toInt(),detail = detail,date=date)
-                    dirayViewModel.insert(myData)})
+                    val myData = MyDiary(id.toInt(), detail = detail, date = date)
+                    dirayViewModel.insert(myData)
+                })
                 TextField(value = detail, onValueChange = {
                     detail = it
-                    val myData = MyDiary(id.toInt(),detail = detail,date=date)
+                    val myData = MyDiary(id.toInt(), detail = detail, date = date)
                     dirayViewModel.insert(myData)
                 })
                 TextField(value = date, onValueChange = {
                     date = it
-                    val myData = MyDiary(id.toInt(),detail = detail,date=date)
+                    val myData = MyDiary(id.toInt(), detail = detail, date = date)
                     dirayViewModel.insert(myData)
                 })
                 Spacer(modifier = Modifier.height(300.dp))
-            }){
+            }) {
 
 
             LazyColumn(state = rememberLazyListState()) {

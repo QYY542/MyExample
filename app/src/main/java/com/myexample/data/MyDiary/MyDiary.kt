@@ -3,7 +3,7 @@ package com.myexample.data.MyDiary
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.myexample.presentation.diary.Mood
+import com.myexample.presentation.Diary.Mood
 
 /*
   **Created by 24606 at 11:15 2022.

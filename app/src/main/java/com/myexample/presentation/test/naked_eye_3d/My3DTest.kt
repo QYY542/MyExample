@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getSystemService
 import com.myexample.R
-import com.myexample.presentation.note.MyViewModel
+import com.myexample.presentation.Note.NoteViewModel
 
 /*
   **Created by 24606 at 16:59 2022.
@@ -27,7 +27,7 @@ const val TAG = "MainActivity"
 
 @Composable
 fun My3DTest(
-    viewModel: MyViewModel
+    viewModel: NoteViewModel
 ) {
 
     val imageBack = ImageBitmap.imageResource(id = R.drawable.icon_three_bg)

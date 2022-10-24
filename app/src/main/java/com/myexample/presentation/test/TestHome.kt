@@ -13,12 +13,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.myexample.R
-import com.myexample.presentation.note.MyViewModel
-import com.myexample.presentation.test.naked_eye_3d.My3DTest
-import com.myexample.presentation.test.roomtest.MyRoomTest
+import com.myexample.presentation.Note.NoteViewModel
 import com.myexample.presentation.test.roomtest.NavTest
 import com.myexample.utils.currentTime
 import java.util.*
@@ -31,7 +27,7 @@ import java.util.*
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TestHome(
-    viewModel: MyViewModel
+    viewModel: NoteViewModel
 ) {
     //测试Room数据库连接
     val navController = rememberNavController()
@@ -65,7 +61,6 @@ fun TestHome(
 
         }
     }
-
 
 
     //测试3D效果

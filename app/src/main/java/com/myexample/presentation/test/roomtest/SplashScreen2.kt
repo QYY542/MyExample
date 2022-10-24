@@ -4,19 +4,14 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.myexample.R
-import com.myexample.presentation.note.MyViewModel
+import com.myexample.presentation.Note.NoteViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -28,7 +23,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SplashScreen2(
     navController: NavController,
-    viewModel: MyViewModel
+    viewModel: NoteViewModel
 ) {
 //    viewModel.navController_Number.value = 0
     viewModel.setNavControllerNumber(0)
@@ -50,7 +45,7 @@ fun SplashScreen2(
         restartOnPlay = false
     )
     var flag = true
-    if(flag){
+    if (flag) {
         Box(Modifier.fillMaxSize()) {
             LottieAnimation(
                 composition = composition,
@@ -66,8 +61,8 @@ fun SplashScreen2(
 
     coroutineScope.launch {
         delay(1000)
-        flag =false
-        replay =false
+        flag = false
+        replay = false
         delay(1000)
         navController.navigate("note_screen")
         navController.enableOnBackPressed(false)
