@@ -26,7 +26,6 @@ fun SplashScreen2(
     viewModel: NoteViewModel
 ) {
 //    viewModel.navController_Number.value = 0
-    viewModel.setNavControllerNumber(0)
     var coroutineScope = rememberCoroutineScope()
 
     var replay by remember {

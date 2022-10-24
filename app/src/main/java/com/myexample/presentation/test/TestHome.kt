@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.compose.rememberNavController
 import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.test.naked_eye_3d.My3DTest
 import com.myexample.presentation.test.roomtest.NavTest
 import com.myexample.utils.currentTime
 import java.util.*
@@ -32,39 +33,39 @@ fun TestHome(
     //测试Room数据库连接
     val navController = rememberNavController()
 //    MyRoomTest(viewModel)
-    Scaffold(bottomBar = {
-        Row() {
-            Button(onClick = { navController.navigate("note_screen") }) {
-                Text(text = "note_screen")
-            }
-            Button(onClick = { navController.navigate("diary_screen") }) {
-                Text(text = "diary_screen")
-            }
-            Button(onClick = { navController.navigate("target_screen") }) {
-                Text(text = "target_screen")
-            }
-        }
-    }) {
-        Column(Modifier.fillMaxSize()) {
-            NavTest(navController = navController, viewModel = viewModel)
-            Row() {
-                Button(onClick = { navController.navigate("note_screen") }) {
-                    Text(text = "note_screen")
-                }
-                Button(onClick = { navController.navigate("diary_screen") }) {
-                    Text(text = "diary_screen")
-                }
-                Button(onClick = { navController.navigate("target_screen") }) {
-                    Text(text = "target_screen")
-                }
-            }
-
-        }
-    }
+//    Scaffold(bottomBar = {
+//        Row() {
+//            Button(onClick = { navController.navigate("note_screen") }) {
+//                Text(text = "note_screen")
+//            }
+//            Button(onClick = { navController.navigate("diary_screen") }) {
+//                Text(text = "diary_screen")
+//            }
+//            Button(onClick = { navController.navigate("target_screen") }) {
+//                Text(text = "target_screen")
+//            }
+//        }
+//    }) {
+//        Column(Modifier.fillMaxSize()) {
+//            NavTest(navController = navController, viewModel = viewModel)
+//            Row() {
+//                Button(onClick = { navController.navigate("note_screen") }) {
+//                    Text(text = "note_screen")
+//                }
+//                Button(onClick = { navController.navigate("diary_screen") }) {
+//                    Text(text = "diary_screen")
+//                }
+//                Button(onClick = { navController.navigate("target_screen") }) {
+//                    Text(text = "target_screen")
+//                }
+//            }
+//
+//        }
+//    }
 
 
     //测试3D效果
-//    My3DTest(viewModel)
+    My3DTest(viewModel)
     //测试输入法遮挡问题
 //    inputting()
     //测试时间

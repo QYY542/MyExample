@@ -130,7 +130,7 @@ fun NoteHome(
 
                     itemsIndexed(state.sortedBy {
                         it.status
-                    }.filter { !it.complete }) { index, item ->
+                    }.filter { !it.complete && it.date == constant.selectTime }) { index, item ->
 
                         NoteCard(
                             modifier = Modifier.padding(12.dp, 0.dp),
@@ -164,7 +164,7 @@ fun NoteHome(
 
                     itemsIndexed(state.sortedBy {
                         it.status
-                    }.filter { it.complete }) { index, item ->
+                    }.filter { it.complete && it.date == constant.selectTime }) { index, item ->
                         NoteCard(
                             modifier = Modifier.padding(12.dp, 0.dp),
                             item = item,

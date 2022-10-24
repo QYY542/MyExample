@@ -6,6 +6,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myexample.data.MyData.MyData
+import com.myexample.presentation.Priority
 import com.myexample.repository.MyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -92,7 +93,7 @@ class NoteViewModel @Inject constructor(
         _y.value = y
     }
 
-    
+
     //数据
     val id = mutableStateOf<Int?>(0)
 
@@ -107,6 +108,8 @@ class NoteViewModel @Inject constructor(
     val date = mutableStateOf("")
 
     val status = mutableStateOf(Status.INCOMPLETED_GREEN)
+
+    val priority = mutableStateOf(Priority.LOW)
 
     val detail_2 = mutableStateOf(
         TextFieldValue(

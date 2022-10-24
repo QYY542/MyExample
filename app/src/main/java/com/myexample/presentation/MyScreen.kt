@@ -26,7 +26,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
 import com.myexample.MainViewModel
 import com.myexample.R
 import com.myexample.data.MyData.MyData
@@ -35,6 +34,7 @@ import com.myexample.presentation.Diary.DirayViewModel
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
 import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Note.toPriority
 import com.myexample.presentation.target.StatusViewModel
 import com.myexample.presentation.ui.theme.ColorBACK
 import com.myexample.utils.constant
@@ -66,6 +66,8 @@ fun MyScreen(
     val navController_Number by mainViewModel.navController_Number
     var coroutineScope = rememberCoroutineScope()
     val kc = LocalSoftwareKeyboardController.current
+
+
     //语音动画
 //    var alpha by remember {
 //        mutableStateOf(0F)
@@ -199,6 +201,9 @@ fun MyScreen(
             inSheet = true
         }
     }
+
+
+
 
     BackHandler(enabled = inSheet) {
         coroutineScope.launch {
@@ -489,6 +494,7 @@ fun MyScreen(
                         noteViewModel.detail.value = if (it.detail == "") "●" else it.detail
                         noteViewModel.complete.value = it.complete
                         noteViewModel.status.value = it.status
+                        noteViewModel.priority.value = it.status.toPriority()
 //                    if (it.detail == "") {
 //                        viewModel.detail.value = "●"
 //                    }

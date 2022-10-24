@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.view.WindowCompat
 import com.myexample.presentation.Diary.DirayViewModel
 import com.myexample.presentation.target.StatusViewModel
+import com.myexample.presentation.test.TestHome
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
                         Column(Modifier.fillMaxSize()) {
                             Spacer(modifier = Modifier.height(30.dp))
                             MyScreen(mainViewModel, noteViewModel, statusViewModel, diaryViewModel)
-//                            TestHome(viewModel)
+//                            TestHome(noteViewModel)
                         }
 
                     }

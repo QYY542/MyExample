@@ -1,4 +1,4 @@
-package com.mhss.app.mybrain.presentation.tasks
+package com.myexample.presentation
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -38,6 +38,7 @@ import com.myexample.presentation.Diary.DiaryDetail
 import com.myexample.presentation.Diary.DirayViewModel
 import com.myexample.presentation.Note.NoteViewModel
 import com.myexample.presentation.Note.Status
+import com.myexample.presentation.Note.toPriority
 import com.myexample.presentation.ui.theme.Green
 import com.myexample.presentation.ui.theme.Orange
 import com.myexample.presentation.ui.theme.Purple
@@ -95,6 +96,8 @@ fun AddTaskBottomSheetContentNote(
     val importance = viewModel.importance
     val complete = viewModel.complete
     val status = viewModel.status
+    var priority = viewModel.priority
+
 
     var detail_2 = viewModel.detail_2
 
@@ -109,7 +112,7 @@ fun AddTaskBottomSheetContentNote(
     )
 
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
-    var priority by rememberSaveable { mutableStateOf(Priority.LOW) }
+
     var coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = sheetState.isVisible) {
@@ -117,9 +120,13 @@ fun AddTaskBottomSheetContentNote(
             id.value = null
             title.value = ""
             detail.value = "●"
+            date.value = currentTime.formatTime()
+            priority.value = Priority.LOW
+
         }
         detail_2.value =
             TextFieldValue(text = detail.value, selection = TextRange(detail.value.length))
+        priority.value = status.value.toPriority()
     }
 
 
@@ -150,15 +157,16 @@ fun AddTaskBottomSheetContentNote(
 //                    if (detail.equals("●")) {
 //                        detail.value = ""
 //                    }
-                    val myData = MyData(
-                        id = id.value,
-                        title = title.value,
-                        detail = dealText(detail_2.value.text),
-                        importance = importance.value,
-                        complete = complete.value,
-                        date = date.value,
-                        status = getStatus(priority)
-                    )
+                    myData.title = title.value
+                    myData.detail = dealText(detail_2.value.text)
+                    myData.importance = importance.value
+                    myData.complete = complete.value
+                    myData.date = date.value
+                    if (myData.complete) {
+                        myData.status = Status.COMPLETED
+                    } else {
+                        myData.status = getStatus(priority.value)
+                    }
                     if (!title.equals("")) {
                         viewModel.insert(myData)
                     }
@@ -187,18 +195,13 @@ fun AddTaskBottomSheetContentNote(
                 if (date.equals("")) {
                     date.value = currentTime.formatTime()
                 }
-//                if (detail.equals("●")) {
-//                    detail.value = ""
-//                }
-                val myData = MyData(
-                    id = id.value,
-                    title = title.value,
-                    detail = dealText(detail_2.value.text),
-                    importance = importance.value,
-                    complete = complete.value,
-                    date = date.value,
-                    status = getStatus(priority)
-                )
+                myData.title = title.value
+                myData.detail = dealText(detail_2.value.text)
+                if (myData.complete) {
+                    myData.status = Status.COMPLETED
+                } else {
+                    myData.status = getStatus(priority.value)
+                }
                 if (!title.equals("")) {
                     viewModel.update(myData)
                 }
@@ -225,6 +228,7 @@ fun AddTaskBottomSheetContentNote(
             mutableStateOf(true)
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
         //content
         OutlinedTextField(
             value = detail_2.value,
@@ -234,18 +238,21 @@ fun AddTaskBottomSheetContentNote(
                 if (date.equals("")) {
                     date.value = currentTime.formatTime()
                 }
-//                if (detail.equals("●")) {
-//                    detail.value = ""
-//                }
-                val myData = MyData(
-                    id = id.value,
-                    title = title.value,
-                    detail = dealText(detail_2.value.text),
-                    importance = importance.value,
-                    complete = complete.value,
-                    date = date.value,
-                    status = getStatus(priority)
-                )
+                if (detail_2.value.text.equals("")) {
+                    detail.value = "●"
+                    detail_2.value =
+                        TextFieldValue(
+                            text = detail.value,
+                            selection = TextRange(detail.value.length)
+                        )
+                }
+                myData.title = title.value
+                myData.detail = dealText(detail_2.value.text)
+                if (myData.complete) {
+                    myData.status = Status.COMPLETED
+                } else {
+                    myData.status = getStatus(priority.value)
+                }
                 if (!title.equals("")) {
                     viewModel.update(myData)
                 }
@@ -284,30 +291,32 @@ fun AddTaskBottomSheetContentNote(
         Spacer(Modifier.height(12.dp))
         PriorityTabRow(
             priorities = priorities,
-            selectedPriority = priority,
+            selectedPriority = priority.value,
             onChange = {
-                priority = it
-                myData.status = getStatus(priority)
+                priority.value = it
                 myData.title = title.value
                 myData.detail = dealText(detail_2.value.text)
+                if (myData.complete) {
+                    myData.status = Status.COMPLETED
+                } else {
+                    myData.status = getStatus(priority.value)
+                }
                 if (myData.title != "") {
                     viewModel.update(myData)
                 }
             }
         )
-
         Spacer(Modifier.height(320.dp))
-
-
     }
 }
 
 fun dealText(text: String): String {
     var temp: String = ""
+    var count = 0
     if (text == "●") {
         temp = text
     } else if (text != "") {
-        val list = text.split("\n")
+        val list = text.split("\n").filter { it != "●" && it != "" }
         list.forEachIndexed { index, it ->
             if (it != "" && it[0] == '●' && it.length > 1) {
                 if (index == list.size - 1) {
@@ -315,11 +324,9 @@ fun dealText(text: String): String {
                 } else {
                     temp += it + "\n"
                 }
-
             }
         }
     }
-
     return temp
 }
 
