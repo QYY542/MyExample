@@ -1,7 +1,8 @@
 package com.myexample.presentation.note
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -102,7 +103,7 @@ class MyViewModel @Inject constructor(
     }
 
     //数据
-    val id = mutableStateOf(0)
+    val id = mutableStateOf<Int?>(0)
 
     val title = mutableStateOf("")
 
@@ -115,6 +116,13 @@ class MyViewModel @Inject constructor(
     val date = mutableStateOf("")
 
     val status = mutableStateOf(Status.INCOMPLETED_GREEN)
+
+    val detail_2 = mutableStateOf(
+        TextFieldValue(
+            text = detail.value,
+            selection = TextRange(detail.value.length)
+        )
+    )
 
 
 }

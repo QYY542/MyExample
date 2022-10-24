@@ -100,10 +100,7 @@ fun AddTaskBottomSheetContent(
                 diaryViewModel = diaryViewModel
             )
         }
-
     }
-
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -113,79 +110,41 @@ fun AddTaskBottomSheetContentNote(
     viewModel: MyViewModel,
     item: MyData
 ) {
-    var id: Int? by remember {
-        mutableStateOf(null)
-    }
-    var title by remember {
-        mutableStateOf("")
-    }
-    var detail by remember {
-        mutableStateOf("")
-    }
-    var detail_2 by remember {
-        val selection = TextRange(detail.length)
-        val textFieldValue = TextFieldValue(text = detail, selection = selection)
-        mutableStateOf(textFieldValue)
-    }
 
-    var importance by remember {
-        mutableStateOf(false)
-    }
-    var complete by remember {
-        mutableStateOf(false)
-    }
-    var date by remember {
-        mutableStateOf("")
-    }
-    var status by remember {
-        mutableStateOf(Status.INCOMPLETED_GREEN)
-    }
+
+    val id = viewModel.id
+    val title = viewModel.title
+    val detail = viewModel.detail
+    val date = viewModel.date
+    val importance = viewModel.importance
+    val complete = viewModel.complete
+    val status = viewModel.status
+
+    var detail_2 = viewModel.detail_2
+
+    val myData = MyData(
+        id = id.value,
+        title = title.value,
+        detail = detail.value,
+        date = date.value,
+        importance = importance.value,
+        complete = complete.value,
+        status = status.value
+    )
 
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
     var priority by rememberSaveable { mutableStateOf(Priority.LOW) }
     var coroutineScope = rememberCoroutineScope()
 
-
-    LaunchedEffect(
-        key1 = item,
-        key2 = constant.onAddButton,
-        key3 = constant.onAddButtonChange
-    ) {
-        if (constant.onAddButton) {
-            val item = MyData()
-            id = item.id
-            title = item.title
-            detail = "●"
-            importance = item.importance
-            complete = item.complete
-            status = item.status
-            priority = status.toPriority()
-        } else {
-            id = item.id
-            title = item.title
-            if (item.detail == "") {
-                detail = "●"
-            } else {
-                detail = item.detail
-            }
-            importance = item.importance
-            complete = item.complete
-            status = item.status
-            priority = status.toPriority()
-        }
-        detail_2 = TextFieldValue(text = detail, selection = TextRange(detail.length))
-    }
-
     LaunchedEffect(key1 = sheetState.isVisible) {
         if (!sheetState.isVisible) {
-            id = null
-            title = ""
-            detail = "●"
-            detail_2 = TextFieldValue(text = detail, selection = TextRange(detail.length))
+            id.value = null
+            title.value = ""
+            detail.value = "●"
         }
-
+        detail_2.value =
+            TextFieldValue(text = detail.value, selection = TextRange(detail.value.length))
     }
-
 
 
     Column(
@@ -210,18 +169,18 @@ fun AddTaskBottomSheetContentNote(
                 onClick = {
                     focusManager.clearFocus()
                     if (date.equals("")) {
-                        date = currentTime.formatTime()
+                        date.value = currentTime.formatTime()
                     }
-                    if (detail.equals("●")) {
-                        detail = ""
-                    }
+//                    if (detail.equals("●")) {
+//                        detail.value = ""
+//                    }
                     val myData = MyData(
-                        id = id,
-                        title = title,
-                        detail = dealText(detail_2.text),
-                        importance = importance,
-                        complete = complete,
-                        date = date,
+                        id = id.value,
+                        title = title.value,
+                        detail = dealText(detail_2.value.text),
+                        importance = importance.value,
+                        complete = complete.value,
+                        date = date.value,
                         status = getStatus(priority)
                     )
                     if (!title.equals("")) {
@@ -266,24 +225,25 @@ fun AddTaskBottomSheetContentNote(
 //                .height(150.dp)
 //        )
 
+        //title
         OutlinedTextField(
-            value = title,
+            value = title.value,
             onValueChange = {
-                title = it
+                title.value = it
 
                 if (date.equals("")) {
-                    date = currentTime.formatTime()
+                    date.value = currentTime.formatTime()
                 }
-                if (detail.equals("●")) {
-                    detail = ""
-                }
+//                if (detail.equals("●")) {
+//                    detail.value = ""
+//                }
                 val myData = MyData(
-                    id = id,
-                    title = title,
-                    detail = dealText(detail_2.text),
-                    importance = importance,
-                    complete = complete,
-                    date = date,
+                    id = id.value,
+                    title = title.value,
+                    detail = dealText(detail_2.value.text),
+                    importance = importance.value,
+                    complete = complete.value,
+                    date = date.value,
                     status = getStatus(priority)
                 )
                 if (!title.equals("")) {
@@ -312,25 +272,25 @@ fun AddTaskBottomSheetContentNote(
             mutableStateOf(true)
         }
 
-
+        //content
         OutlinedTextField(
-            value = detail_2,
+            value = detail_2.value,
             onValueChange = {
-                detail_2 = it
+                detail_2.value = it
                 ableToTextNextLine = true
                 if (date.equals("")) {
-                    date = currentTime.formatTime()
+                    date.value = currentTime.formatTime()
                 }
-                if (detail.equals("●")) {
-                    detail = ""
-                }
+//                if (detail.equals("●")) {
+//                    detail.value = ""
+//                }
                 val myData = MyData(
-                    id = id,
-                    title = title,
-                    detail = dealText(detail_2.text),
-                    importance = importance,
-                    complete = complete,
-                    date = date,
+                    id = id.value,
+                    title = title.value,
+                    detail = dealText(detail_2.value.text),
+                    importance = importance.value,
+                    complete = complete.value,
+                    date = date.value,
                     status = getStatus(priority)
                 )
                 if (!title.equals("")) {
@@ -359,11 +319,11 @@ fun AddTaskBottomSheetContentNote(
             keyboardActions = KeyboardActions(onDone = {
 //                detail_2.text += "\n●"
                 if (ableToTextNextLine) {
-                    val text = detail_2.text + "\n●"
+                    val text = detail_2.value.text + "\n●"
                     val selection = TextRange(text.length)
                     val textFieldValue =
                         TextFieldValue(text = text, selection = selection)
-                    detail_2 = textFieldValue
+                    detail_2.value = textFieldValue
                     ableToTextNextLine = false
                 }
             })
@@ -374,11 +334,10 @@ fun AddTaskBottomSheetContentNote(
             selectedPriority = priority,
             onChange = {
                 priority = it
-                val myData = item
                 myData.status = getStatus(priority)
-                myData.title = title
-                myData.detail = dealText(detail_2.text)
-                if (!myData.title.equals("")) {
+                myData.title = title.value
+                myData.detail = dealText(detail_2.value.text)
+                if (myData.title != "") {
                     viewModel.update(myData)
                 }
             }
@@ -392,7 +351,9 @@ fun AddTaskBottomSheetContentNote(
 
 fun dealText(text: String): String {
     var temp: String = ""
-    if (text != "") {
+    if (text == "●") {
+        temp = text
+    } else if (text != "") {
         val list = text.split("\n")
         list.forEachIndexed { index, it ->
             if (it != "" && it[0] == '●' && it.length > 1) {

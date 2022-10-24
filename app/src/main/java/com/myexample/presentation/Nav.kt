@@ -41,7 +41,7 @@ fun Nav(
         startDestination = "splash_screen",
     ) {
         composable("splash_screen") {
-            SplashScreen2(navController, viewModel)
+            SplashScreen(navController, viewModel)
         }
         composable("note_screen") {
             NoteScreen(navController, viewModel, onClick = {

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.mhss.app.mybrain.presentation.tasks.AddTaskBottomSheetContent
 import com.myexample.R
 import com.myexample.data.MyData.MyData
+import com.myexample.presentation.test.roomtest.Car2
 import com.myexample.presentation.ui.theme.ColorBACK
 import com.myexample.utils.constant
 import com.myexample.utils.currentTime
@@ -50,37 +51,9 @@ fun NoteHome(
     sheetState: ModalBottomSheetState,
 ) {
     val state by viewModel.state.collectAsState()
-    val refresh by viewModel.refresh.collectAsState()
-
 
     var showDataPicker by remember {
         mutableStateOf(false)
-    }
-
-
-    var taskToDo = state.filter {
-        !it.complete && it.date == constant.selectTime
-    }.sortedBy {
-        it.status
-    }
-    var taskCompleted = state.filter {
-        it.complete && it.date == constant.selectTime
-    }
-
-
-    LaunchedEffect(key1 = refresh) {
-        taskToDo = state.filter {
-            !it.complete && it.date == constant.selectTime
-        }.sortedBy {
-            it.status
-        }
-        taskCompleted = state.filter {
-            it.complete && it.date == constant.selectTime
-        }
-    }
-
-    LaunchedEffect(key1 = sheetState.isVisible) {
-        showDataPicker = false
     }
 
     Scaffold(
@@ -118,14 +91,6 @@ fun NoteHome(
             )
         }
     ) {
-
-        var showIncompleted by remember {
-            mutableStateOf(true)
-        }
-        var showCompleted by remember {
-            mutableStateOf(true)
-        }
-
         Box(Modifier.fillMaxSize()) {
 
             Column(Modifier.fillMaxSize()) {
@@ -154,20 +119,29 @@ fun NoteHome(
                         }
                     }
 
-                    if (showIncompleted) {
-                        itemsIndexed(taskToDo.sortedBy {
-                            it.status
-                        }) { index, item ->
-                            NoteCard(
-                                modifier = Modifier.padding(12.dp, 0.dp),
-                                itemi = item,
-                                complete = true,
-                                homeScreen = true,
-                                viewModel = viewModel,
-                                onClick = { onClick(it) },
-                            )
-                        }
+
+                    itemsIndexed(state.sortedBy {
+                        it.status
+                    }.filter { !it.complete }) { index, item ->
+//                            NoteCard(
+//                                modifier = Modifier.padding(12.dp, 0.dp),
+//                                itemi = item,
+//                                complete = true,
+//                                homeScreen = true,
+//                                viewModel = viewModel,
+//                                onClick = { onClick(it) },
+//                            )
+                        Car2(
+                            modifier = Modifier.padding(12.dp, 0.dp),
+                            item = item,
+                            viewModel = viewModel,
+                            onClick = {
+                                onClick(it)
+                            }
+
+                        )
                     }
+
 
 
 
@@ -192,17 +166,28 @@ fun NoteHome(
 
                     }
 
-                    if (showCompleted) {
-                        itemsIndexed(taskCompleted) { index, item ->
-                            NoteCard(
-                                modifier = Modifier.padding(12.dp, 0.dp),
-                                itemi = item,
-                                complete = false,
-                                homeScreen = true,
-                                viewModel = viewModel,
-                                onClick = { onClick(it) }
-                            )
-                        }
+
+                    itemsIndexed(state.sortedBy {
+                        it.status
+                    }.filter { it.complete }) { index, item ->
+//                            NoteCard(
+//                                modifier = Modifier.padding(12.dp, 0.dp),
+//                                itemi = item,
+//                                complete = false,
+//                                homeScreen = true,
+//                                viewModel = viewModel,
+//                                onClick = { onClick(it) }
+//                            )
+                        Car2(
+                            modifier = Modifier.padding(12.dp, 0.dp),
+                            item = item,
+                            viewModel = viewModel,
+                            onClick = {
+                                onClick(it)
+                            }
+
+                        )
+
                     }
                 }
             }

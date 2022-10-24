@@ -120,7 +120,23 @@ fun MyRoomTest(
             //列表
             LazyColumn(state = rememberLazyListState()) {
                 items(items = state.sortedBy { it.status }) { item ->
-                    Car2(Modifier, item, sheetState, viewModel)
+                    Car2(Modifier, item, viewModel, onClick = {
+                        //赋值
+                        viewModel.id.value = item.id!!
+                        viewModel.date.value = item.date
+                        viewModel.title.value = item.title
+                        viewModel.detail.value = item.detail
+                        viewModel.complete.value = item.complete
+                        viewModel.status.value = item.status
+                        //展示
+                        coroutineScope.launch {
+                            if (sheetState.isVisible) {
+                                sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                            } else {
+                                sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                            }
+                        }
+                    })
                 }
             }
 
@@ -210,8 +226,8 @@ fun Car(
 fun Car2(
     modifier: Modifier,
     item: MyData,
-    sheetState: ModalBottomSheetState,
     viewModel: MyViewModel,
+    onClick: (item: MyData) -> Unit
 ) {
     val context = LocalContext.current
     var coroutineScope = rememberCoroutineScope()
@@ -239,17 +255,8 @@ fun Car2(
 //                        onClick(item)
 //                        constant.onAddButton = false
 //                        constant.onAddButtonChange++
-                        //赋值
-                        viewModel.id.value = item.id!!
-                        viewModel.date.value = item.date
-                        viewModel.title.value = item.title
-                        viewModel.detail.value = item.detail
-                        viewModel.complete.value = item.complete
-                        viewModel.status.value = item.status
-
-                        coroutineScope.launch {
-                            sheetState.show()
-                        }
+                        //逻辑在外面写，执行在这里
+                        onClick(item)
                     },
                     onDoubleClick = {
                         vibrate_2(context)
@@ -340,7 +347,7 @@ fun Car2(
 
                         Icon(
                             painterResource(R.drawable.ic_delete),
-                            item.status.title,
+                            myData.status.title,
                             tint = Red,
                             modifier = Modifier.size(30.dp)
                         )
@@ -349,7 +356,7 @@ fun Car2(
                 }
             }
 
-            if (myData.detail.isNotBlank()) {
+            if (item.detail.isNotBlank() && item.detail != "●") {
                 Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Spacer(Modifier.width(8.dp))

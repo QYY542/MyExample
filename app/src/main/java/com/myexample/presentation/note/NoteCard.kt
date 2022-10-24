@@ -185,7 +185,7 @@ fun NoteCard(
                 }
             }
 
-            if (item.detail.isNotBlank()) {
+            if (item.detail.isNotBlank() && item.detail != "●") {
                 Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Spacer(Modifier.width(8.dp))

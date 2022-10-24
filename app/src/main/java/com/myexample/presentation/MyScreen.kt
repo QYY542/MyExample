@@ -21,6 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
@@ -471,13 +473,27 @@ fun MyScreen(
                 }) {
                 // Screen content
                 Nav(navController, viewModel, diaryViewModel, sheetState, onClick = {
-                    item = it
+                    //赋值
+                    viewModel.id.value = it.id!!
+                    viewModel.date.value = it.date
+                    viewModel.title.value = it.title
+                    viewModel.detail.value = if (it.detail == "") "●" else it.detail
+                    viewModel.complete.value = it.complete
+                    viewModel.status.value = it.status
+//                    if (it.detail == "") {
+//                        viewModel.detail.value = "●"
+//                    }
+                    viewModel.detail_2.value =
+                        TextFieldValue(text = it.detail, selection = TextRange(it.detail.length))
+
+                    //展示
                     coroutineScope.launch {
                         if (sheetState.isVisible) {
                             sheetState.animateTo(ModalBottomSheetValue.Hidden)
                         } else {
                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                         }
+//                        sheetState.show()
                     }
 
                 }, onClickDiary = {

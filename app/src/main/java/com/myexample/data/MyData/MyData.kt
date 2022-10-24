@@ -16,7 +16,7 @@ data class MyData(
     @ColumnInfo(name = "id", typeAffinity = ColumnInfo.INTEGER)
     val id: Int? = null,
     var title: String = "",
-    var detail: String = "",
+    var detail: String = "●",
     var importance: Boolean = false,
     var complete: Boolean = false,
     var date: String = "2022-1-1",
