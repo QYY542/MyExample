@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.myexample.data.AppDatabase
 import com.myexample.data.MyData.MyDataDao
 import com.myexample.data.MyDiary.MyDiaryDao
-import com.myexample.data.MyTarget.MyTargetDao
+import com.myexample.data.MyTarget.MyStatusDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +43,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMyTargetDao(database: AppDatabase): MyTargetDao = database.getMyTargetDao()
+    fun provideMyTargetDao(database: AppDatabase): MyStatusDao = database.getMyTargetDao()
 
 
     private val MIGRATION_1_2: Migration = object : Migration(1, 2) {

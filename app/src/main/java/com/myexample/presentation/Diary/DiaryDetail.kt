@@ -60,7 +60,9 @@ fun DiaryDetail(
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                text = date,
+                text = date.filterIndexed { index, c ->
+                    index > 1
+                },
                 fontFamily = FontFamily(Font(R.font.rubik_bold)),
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,

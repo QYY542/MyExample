@@ -5,7 +5,7 @@ import com.myexample.data.MyData.MyDataDao
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.data.MyDiary.MyDiaryDao
 import com.myexample.data.MyTarget.MyTarget
-import com.myexample.data.MyTarget.MyTargetDao
+import com.myexample.data.MyTarget.MyStatusDao
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -18,12 +18,12 @@ import javax.inject.Inject
 class MyRepository @Inject constructor(
     private val myDataDao: MyDataDao,
     private val myDiaryDao: MyDiaryDao,
-    private val myTargetDao: MyTargetDao
+    private val myStatusDao: MyStatusDao
 ) {
     //MyData
     fun getAllData(): Flow<List<MyData>> = myDataDao.getAll()
 
-    fun getByTitle(title:String): Flow<List<MyData>> = myDataDao.getByTitle(title)
+    fun getByTitle(title: String): Flow<List<MyData>> = myDataDao.getByTitle(title)
 
     suspend fun insert(myData: MyData?) {
         if (myData != null) {
@@ -71,25 +71,25 @@ class MyRepository @Inject constructor(
     }
 
     //MyTarget
-    fun getAllDataTarget(): Flow<List<MyTarget>> = myTargetDao.getAll()
+    fun getAllDataTarget(): Flow<List<MyTarget>> = myStatusDao.getAll()
 
     suspend fun insertTarget(myTarget: MyTarget?) {
         if (myTarget != null) {
-            myTargetDao.insert(myTarget)
+            myStatusDao.insert(myTarget)
         }
     }
 
     suspend fun deleteAllTarget() {
-        myTargetDao.deleteAll()
+        myStatusDao.deleteAll()
     }
 
     suspend fun deleteByIdTarget(id: Int) {
-        myTargetDao.deleteById(id)
+        myStatusDao.deleteById(id)
     }
 
     suspend fun updateTarget(myTarget: MyTarget?) {
         if (myTarget != null) {
-            myTargetDao.update(myTarget)
+            myStatusDao.update(myTarget)
         }
     }
 

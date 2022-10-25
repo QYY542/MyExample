@@ -2,7 +2,6 @@ package com.myexample.data.MyTarget
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.myexample.data.MyDiary.MyDiary
 import kotlinx.coroutines.flow.Flow
 
 /*
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 */
 
 @Dao
-interface MyTargetDao {
+interface MyStatusDao {
     @Query("SELECT * FROM target")
     fun getAll(): Flow<List<MyTarget>>
 

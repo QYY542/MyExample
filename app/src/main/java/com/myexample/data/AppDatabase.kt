@@ -11,7 +11,7 @@ import com.myexample.data.MyData.MyDataDao
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.data.MyDiary.MyDiaryDao
 import com.myexample.data.MyTarget.MyTarget
-import com.myexample.data.MyTarget.MyTargetDao
+import com.myexample.data.MyTarget.MyStatusDao
 
 /*
   **Created by 24606 at 11:35 2022.
@@ -44,5 +44,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getMyDataDao(): MyDataDao
     abstract fun getMyDiaryDao(): MyDiaryDao
-    abstract fun getMyTargetDao(): MyTargetDao
+    abstract fun getMyTargetDao(): MyStatusDao
 }
