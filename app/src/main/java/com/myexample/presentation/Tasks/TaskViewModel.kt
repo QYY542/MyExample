@@ -1,4 +1,4 @@
-package com.myexample.presentation.Note
+package com.myexample.presentation.Tasks
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.TextRange
@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myexample.data.MyData.MyData
 import com.myexample.repository.MyRepository
+import com.myexample.utils.currentTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ import javax.inject.Inject
 */
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(
+class TaskViewModel @Inject constructor(
     private val myRepository: MyRepository
 ) : ViewModel() {
 
@@ -80,6 +81,24 @@ class NoteViewModel @Inject constructor(
         _y.value = y
     }
 
+    //
+    val myData = mutableStateOf(MyData())
+
+    fun changeMyNote(item: MyData) {
+        myData.value = item
+        id.value = item.id
+        title.value = item.title
+        detail.value = if (item.detail == "") "●" else item.detail
+        importance.value = item.importance
+        complete.value = item.complete
+        date.value = item.date
+        status.value = item.status
+        priority.value = item.status.toPriority()
+        detail_2.value = TextFieldValue(
+            text = detail.value,
+            selection = TextRange(detail.value.length)
+        )
+    }
 
     //数据
     val id = mutableStateOf<Int?>(0)
@@ -104,6 +123,9 @@ class NoteViewModel @Inject constructor(
             selection = TextRange(detail.value.length)
         )
     )
+
+    //
+    val selectTime = mutableStateOf(currentTime.formatTime())
 
 
 }

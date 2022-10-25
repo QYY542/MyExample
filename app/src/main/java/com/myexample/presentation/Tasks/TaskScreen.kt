@@ -1,4 +1,4 @@
-package com.myexample.presentation.Note
+package com.myexample.presentation.Tasks
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,7 +27,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.myexample.MainViewModel
 import com.myexample.data.MyData.MyData
 import com.myexample.presentation.ui.theme.ColorBACK
-import com.myexample.utils.constant
 import com.myexample.utils.currentTime
 
 /*
@@ -38,15 +36,15 @@ import com.myexample.utils.currentTime
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun NoteScreen(
+fun TaskScreen(
     navController: NavController,
     mainViewModel: MainViewModel,
-    viewModel: NoteViewModel = hiltViewModel(),
+    taskViewModel: TaskViewModel = hiltViewModel(),
     onClick: (item: MyData) -> Unit,
 ) {
     mainViewModel.setNavControllerNumber(1)
     navController.enableOnBackPressed(false)
-    NoteHome(viewModel, onClick = {
+    TaskHome(taskViewModel, onClick = {
         onClick(it)
     })
 }
@@ -57,11 +55,11 @@ fun NoteScreen(
 )
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun NoteHome(
-    viewModel: NoteViewModel,
+fun TaskHome(
+    taskViewModel: TaskViewModel,
     onClick: (item: MyData) -> Unit,
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by taskViewModel.state.collectAsState()
 
     var showDataPicker by remember {
         mutableStateOf(false)
@@ -84,7 +82,7 @@ fun NoteHome(
                         Column(Modifier) {
                             Spacer(modifier = Modifier.height(10.dp))
                             Text(
-                                text = constant.selectTime,
+                                text = taskViewModel.selectTime.value,
                                 fontFamily = FontFamily(Font(com.myexample.R.font.rubik_bold)),
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
@@ -130,12 +128,13 @@ fun NoteHome(
 
                     itemsIndexed(state.sortedBy {
                         it.status
-                    }.filter { !it.complete && it.date == constant.selectTime }) { index, item ->
+                    }
+                        .filter { !it.complete && it.date == taskViewModel.selectTime.value }) { index, item ->
 
-                        NoteCard(
+                        TaskCard(
                             modifier = Modifier.padding(12.dp, 0.dp),
                             item = item,
-                            viewModel = viewModel,
+                            taskViewModel = taskViewModel,
                             onClick = {
                                 onClick(it)
                             }
@@ -164,11 +163,12 @@ fun NoteHome(
 
                     itemsIndexed(state.sortedBy {
                         it.status
-                    }.filter { it.complete && it.date == constant.selectTime }) { index, item ->
-                        NoteCard(
+                    }
+                        .filter { it.complete && it.date == taskViewModel.selectTime.value }) { index, item ->
+                        TaskCard(
                             modifier = Modifier.padding(12.dp, 0.dp),
                             item = item,
-                            viewModel = viewModel,
+                            taskViewModel = taskViewModel,
                             onClick = {
                                 onClick(it)
                             }
@@ -188,7 +188,7 @@ fun NoteHome(
                         day = currentTime.day()
                     ) { selected, year, month, day ->
                         val selectTime = "$year-$month-$day"
-                        constant.selectTime = selectTime
+                        taskViewModel.selectTime.value = selectTime
                         showDataPicker = !showDataPicker
                     }
                 }

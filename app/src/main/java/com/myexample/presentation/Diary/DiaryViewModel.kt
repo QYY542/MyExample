@@ -1,6 +1,5 @@
 package com.myexample.presentation.Diary
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +7,6 @@ import com.myexample.data.MyDiary.MyDiary
 import com.myexample.repository.MyRepository
 import com.myexample.utils.currentTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +17,7 @@ import javax.inject.Inject
 */
 
 @HiltViewModel
-class DirayViewModel @Inject constructor(
+class DiaryViewModel @Inject constructor(
     private val myRepository: MyRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<List<MyDiary>>(listOf())
@@ -37,8 +35,8 @@ class DirayViewModel @Inject constructor(
     private val _stateById = MutableStateFlow<MyDiary>(MyDiary())
     val stateById: StateFlow<MyDiary> = _stateById
 
-    fun getById(idd: Int): Flow<MyDiary> {
-        return myRepository.getByIdDiary(idd)
+    fun getById(id: Int) {
+        _stateById.value = _state.value.sortedBy { it.date }.reversed().get(id)
     }
 
     fun insert(myDiary: MyDiary?) {
@@ -75,10 +73,21 @@ class DirayViewModel @Inject constructor(
         }
     }
 
-    //
+    //用于插入数据库
     val myDiary = mutableStateOf(MyDiary())
-    
-    val id: MutableState<Int?> = mutableStateOf(0)
+
+    fun changeMyDiary(item: MyDiary) {
+        myDiary.value = item
+        id.value = item.id
+        title.value = item.title
+        detail.value = item.detail
+        date.value = item.date
+        dateDetail.value = item.dateDetail
+        mood.value = item.mood
+    }
+
+    //用于更新UI界面
+    val id = mutableStateOf<Int?>(0)
 
     val title = mutableStateOf("")
 

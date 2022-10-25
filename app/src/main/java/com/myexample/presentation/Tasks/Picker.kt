@@ -1,4 +1,4 @@
-package com.myexample.presentation.Note
+package com.myexample.presentation.Tasks
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background

@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myexample.data.MyDiary.MyDiary
-import com.myexample.presentation.Diary.DirayViewModel
+import com.myexample.presentation.Diary.DiaryViewModel
 import kotlinx.coroutines.launch
 
 /*
@@ -27,9 +27,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MyDiray(
-    dirayViewModel: DirayViewModel = hiltViewModel()
+    diaryViewModel: DiaryViewModel = hiltViewModel()
 ) {
-    val state by dirayViewModel.state.collectAsState()
+    val state by diaryViewModel.state.collectAsState()
     val sheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     var coroutineScope = rememberCoroutineScope()
@@ -37,7 +37,7 @@ fun MyDiray(
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
-        ButtonList2(dirayViewModel, sheetState)
+        ButtonList2(diaryViewModel, sheetState)
         Text(text = "diary")
         var id by remember {
             mutableStateOf("1")
@@ -54,7 +54,7 @@ fun MyDiray(
             sheetContent = {
                 Button(onClick = {
                     val myData = MyDiary(id.toInt(), detail = detail, date = date)
-                    dirayViewModel.insert(myData)
+                    diaryViewModel.insert(myData)
                     coroutineScope.launch {
                         sheetState.hide()
                         if (kc != null) {
@@ -67,17 +67,17 @@ fun MyDiray(
                 TextField(value = id, onValueChange = {
                     id = it
                     val myData = MyDiary(id.toInt(), detail = detail, date = date)
-                    dirayViewModel.insert(myData)
+                    diaryViewModel.insert(myData)
                 })
                 TextField(value = detail, onValueChange = {
                     detail = it
                     val myData = MyDiary(id.toInt(), detail = detail, date = date)
-                    dirayViewModel.insert(myData)
+                    diaryViewModel.insert(myData)
                 })
                 TextField(value = date, onValueChange = {
                     date = it
                     val myData = MyDiary(id.toInt(), detail = detail, date = date)
-                    dirayViewModel.insert(myData)
+                    diaryViewModel.insert(myData)
                 })
                 Spacer(modifier = Modifier.height(300.dp))
             }) {
@@ -99,7 +99,7 @@ fun MyDiray(
                             Text(text = item.detail)
                         }
                         Button(onClick = {
-                            item.id?.let { dirayViewModel.deleteById(it) }
+                            item.id?.let { diaryViewModel.deleteById(it) }
                         }) {
                             Text(text = "delete")
                         }
@@ -113,7 +113,7 @@ fun MyDiray(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ButtonList2(
-    dirayViewModel: DirayViewModel,
+    diaryViewModel: DiaryViewModel,
     sheetState: ModalBottomSheetState
 ) {
     var id = remember {
@@ -121,21 +121,21 @@ fun ButtonList2(
     }
     Button(onClick = {
         val myData = MyDiary(id.value)
-        dirayViewModel.insert(myData)
+        diaryViewModel.insert(myData)
         id.value++
     }) {
         Text(text = "insert+${id.value}")
     }
 
     Button(onClick = {
-        dirayViewModel.deleteAll()
+        diaryViewModel.deleteAll()
     }) {
         Text(text = "delete_all")
     }
 
     Button(onClick = {
         val myData = MyDiary(3, "123", "553")
-        dirayViewModel.update(myData)
+        diaryViewModel.update(myData)
     }) {
         Text(text = "update")
     }

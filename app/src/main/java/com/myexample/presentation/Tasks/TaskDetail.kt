@@ -1,4 +1,4 @@
-package com.myexample.presentation.Note
+package com.myexample.presentation.Tasks
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -25,11 +25,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myexample.R
-import com.myexample.data.MyData.MyData
 import com.myexample.presentation.ui.theme.Green
 import com.myexample.presentation.ui.theme.Orange
 import com.myexample.presentation.ui.theme.Purple
@@ -43,51 +41,29 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun NoteAddContent(
+fun TaskDetail(
     sheetState: ModalBottomSheetState,
-    viewModel: NoteViewModel,
+    taskViewModel: TaskViewModel,
 ) {
 
 
-    val id = viewModel.id
-    val title = viewModel.title
-    val detail = viewModel.detail
-    val date = viewModel.date
-    val importance = viewModel.importance
-    val complete = viewModel.complete
-    val status = viewModel.status
-    var priority = viewModel.priority
+    var id by taskViewModel.id
+    var title by taskViewModel.title
+    var detail by taskViewModel.detail
+    var date by taskViewModel.date
+    var importance by taskViewModel.importance
+    var complete by taskViewModel.complete
+    var status by taskViewModel.status
+    var priority by taskViewModel.priority
+    var myData by taskViewModel.myData
 
+    var detail_2 by taskViewModel.detail_2
 
-    var detail_2 = viewModel.detail_2
-
-    val myData = MyData(
-        id = id.value,
-        title = title.value,
-        detail = detail.value,
-        date = date.value,
-        importance = importance.value,
-        complete = complete.value,
-        status = status.value
-    )
 
     val priorities = listOf(Priority.LOW, Priority.MEDIUM, Priority.HIGH)
-
     var coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = sheetState.isVisible) {
-        if (!sheetState.isVisible) {
-            id.value = null
-            title.value = ""
-            detail.value = "●"
-            date.value = currentTime.formatTime()
-            complete.value = false
-            priority.value = Priority.LOW
-        }
-        detail_2.value =
-            TextFieldValue(text = detail.value, selection = TextRange(detail.value.length))
-        priority.value = status.value.toPriority()
-    }
+//
 
 
     Column(
@@ -111,24 +87,24 @@ fun NoteAddContent(
             Button(
                 onClick = {
                     focusManager.clearFocus()
-                    if (date.value == "") {
-                        date.value = currentTime.formatTime()
+                    if (date == "") {
+                        date = currentTime.formatTime()
                     }
 //                    if (detail.equals("●")) {
 //                        detail.value = ""
 //                    }
-                    myData.title = title.value
-                    myData.detail = dealText(detail_2.value.text)
-                    myData.importance = importance.value
-                    myData.complete = complete.value
-                    myData.date = date.value
+                    myData.title = title
+                    myData.detail = dealText(detail_2.text)
+                    myData.importance = importance
+                    myData.complete = complete
+                    myData.date = date
                     if (myData.complete) {
                         myData.status = Status.COMPLETED
                     } else {
-                        myData.status = getStatus(priority.value)
+                        myData.status = getStatus(priority)
                     }
-                    if (title.value != "") {
-                        viewModel.insert(myData)
+                    if (title != "") {
+                        taskViewModel.insert(myData)
                     }
                     coroutineScope.launch {
                         sheetState.hide()
@@ -148,22 +124,22 @@ fun NoteAddContent(
 
         //title
         OutlinedTextField(
-            value = title.value,
+            value = title,
             onValueChange = {
-                title.value = it
+                title = it
 
-                if (date.value == "") {
-                    date.value = currentTime.formatTime()
+                if (date == "") {
+                    date = currentTime.formatTime()
                 }
-                myData.title = title.value
-                myData.detail = dealText(detail_2.value.text)
+                myData.title = title
+                myData.detail = dealText(detail_2.text)
                 if (myData.complete) {
                     myData.status = Status.COMPLETED
                 } else {
-                    myData.status = getStatus(priority.value)
+                    myData.status = getStatus(priority)
                 }
-                if (title.value != "") {
-                    viewModel.update(myData)
+                if (title != "") {
+                    taskViewModel.update(myData)
                 }
             },
             label = {
@@ -191,30 +167,30 @@ fun NoteAddContent(
         Spacer(modifier = Modifier.height(8.dp))
         //content
         OutlinedTextField(
-            value = detail_2.value,
+            value = detail_2,
             onValueChange = {
-                detail_2.value = it
+                detail_2 = it
                 ableToTextNextLine = true
-                if (date.value == "") {
-                    date.value = currentTime.formatTime()
+                if (date == "") {
+                    date = currentTime.formatTime()
                 }
-                if (detail_2.value.text == "") {
-                    detail.value = "●"
-                    detail_2.value =
+                if (detail_2.text == "") {
+                    detail = "●"
+                    detail_2 =
                         TextFieldValue(
-                            text = detail.value,
-                            selection = TextRange(detail.value.length)
+                            text = detail,
+                            selection = TextRange(detail.length)
                         )
                 }
-                myData.title = title.value
-                myData.detail = dealText(detail_2.value.text)
+                myData.title = title
+                myData.detail = dealText(detail_2.text)
                 if (myData.complete) {
                     myData.status = Status.COMPLETED
                 } else {
-                    myData.status = getStatus(priority.value)
+                    myData.status = getStatus(priority)
                 }
-                if (title.value != "") {
-                    viewModel.update(myData)
+                if (title != "") {
+                    taskViewModel.update(myData)
                 }
             },
             label = {
@@ -239,11 +215,11 @@ fun NoteAddContent(
             keyboardActions = KeyboardActions(onDone = {
 //                detail_2.text += "\n●"
                 if (ableToTextNextLine) {
-                    val text = detail_2.value.text + "\n●"
+                    val text = detail_2.text + "\n●"
                     val selection = TextRange(text.length)
                     val textFieldValue =
                         TextFieldValue(text = text, selection = selection)
-                    detail_2.value = textFieldValue
+                    detail_2 = textFieldValue
                     ableToTextNextLine = false
                 }
             })
@@ -251,18 +227,18 @@ fun NoteAddContent(
         Spacer(Modifier.height(12.dp))
         PriorityTabRow(
             priorities = priorities,
-            selectedPriority = priority.value,
+            selectedPriority = priority,
             onChange = {
-                priority.value = it
-                myData.title = title.value
-                myData.detail = dealText(detail_2.value.text)
+                priority = it
+                myData.title = title
+                myData.detail = dealText(detail_2.text)
                 if (myData.complete) {
                     myData.status = Status.COMPLETED
                 } else {
-                    myData.status = getStatus(priority.value)
+                    myData.status = getStatus(priority)
                 }
                 if (myData.title != "") {
-                    viewModel.update(myData)
+                    taskViewModel.update(myData)
                 }
             }
         )

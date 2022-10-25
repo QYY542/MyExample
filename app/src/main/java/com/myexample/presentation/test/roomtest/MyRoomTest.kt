@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myexample.R
 import com.myexample.data.MyData.MyData
-import com.myexample.presentation.Note.*
+import com.myexample.presentation.Tasks.*
 import com.myexample.presentation.ui.theme.Red
 import com.myexample.utils.vibrate
 import com.myexample.utils.vibrate_2
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun MyRoomTest(
-    viewModel: NoteViewModel = hiltViewModel()
+    viewModel: TaskViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val sheetState =
@@ -146,7 +146,7 @@ fun MyRoomTest(
 fun Car(
     item: MyData,
     sheetState: ModalBottomSheetState,
-    viewModel: NoteViewModel,
+    viewModel: TaskViewModel,
 ) {
     val context = LocalContext.current
     var coroutineScope = rememberCoroutineScope()
@@ -222,7 +222,7 @@ fun Car(
 fun Car2(
     modifier: Modifier,
     item: MyData,
-    viewModel: NoteViewModel,
+    viewModel: TaskViewModel,
     onClick: (item: MyData) -> Unit
 ) {
     val context = LocalContext.current
@@ -367,7 +367,7 @@ fun Car2(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ButtonList(
-    viewModel: NoteViewModel,
+    viewModel: TaskViewModel,
     sheetState: ModalBottomSheetState
 ) {
     var id = remember {

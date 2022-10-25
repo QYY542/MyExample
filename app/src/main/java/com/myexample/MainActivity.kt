@@ -13,12 +13,11 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.myexample.presentation.MyScreen
 import com.myexample.presentation.ui.theme.MyExampleTheme
-import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Tasks.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.view.WindowCompat
-import com.myexample.presentation.Diary.DirayViewModel
+import com.myexample.presentation.Diary.DiaryViewModel
 import com.myexample.presentation.target.StatusViewModel
-import com.myexample.presentation.test.TestHome
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -40,14 +39,14 @@ class MainActivity : ComponentActivity() {
                     ) {
                         val mainViewModel: MainViewModel by viewModels()
 
-                        val noteViewModel: NoteViewModel by viewModels()
+                        val taskViewModel: TaskViewModel by viewModels()
                         val statusViewModel: StatusViewModel by viewModels()
-                        val diaryViewModel: DirayViewModel by viewModels()
+                        val diaryViewModel: DiaryViewModel by viewModels()
 
 
                         Column(Modifier.fillMaxSize()) {
                             Spacer(modifier = Modifier.height(30.dp))
-                            MyScreen(mainViewModel, noteViewModel, statusViewModel, diaryViewModel)
+                            MyScreen(mainViewModel, taskViewModel, statusViewModel, diaryViewModel)
 //                            TestHome(noteViewModel)
                         }
 

@@ -11,7 +11,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.myexample.R
-import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Tasks.TaskViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SplashScreen2(
     navController: NavController,
-    viewModel: NoteViewModel
+    viewModel: TaskViewModel
 ) {
 //    viewModel.navController_Number.value = 0
     var coroutineScope = rememberCoroutineScope()

@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.myexample.data.MyTarget.GList
 import com.myexample.data.MyTarget.PersonList
+import com.myexample.presentation.Diary.Mood
 
 /*
   **Created by 24606 at 13:59 2022.
@@ -36,4 +37,7 @@ class DetailTypeConverters {
         val gson = Gson()
         return gson.toJson(value)
     }
+
+    //mood
+
 }

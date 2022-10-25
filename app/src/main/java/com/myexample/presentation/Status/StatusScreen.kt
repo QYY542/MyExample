@@ -1,4 +1,4 @@
-package com.myexample.presentation.Satus
+package com.myexample.presentation.Status
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable

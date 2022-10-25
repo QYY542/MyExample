@@ -21,8 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
@@ -30,15 +29,15 @@ import com.myexample.MainViewModel
 import com.myexample.R
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
-import com.myexample.presentation.Diary.DirayViewModel
+import com.myexample.presentation.Diary.DiaryViewModel
 import com.myexample.utils.sizeState_E
 import com.myexample.utils.vibrate
-import com.myexample.presentation.Note.NoteViewModel
-import com.myexample.presentation.Note.toPriority
+import com.myexample.presentation.Tasks.TaskViewModel
 import com.myexample.presentation.target.StatusViewModel
 import com.myexample.presentation.ui.theme.ColorBACK
 import com.myexample.utils.constant
 import com.myexample.utils.constant.onAddButtonChange
+import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
 
 /*
@@ -56,9 +55,9 @@ val localY = 60.dp
 @Composable
 fun MyScreen(
     mainViewModel: MainViewModel,
-    noteViewModel: NoteViewModel,
+    taskViewModel: TaskViewModel,
     statusViewModel: StatusViewModel,
-    diaryViewModel: DirayViewModel
+    diaryViewModel: DiaryViewModel
 ) {
     //基本
     val context = LocalContext.current
@@ -67,25 +66,6 @@ fun MyScreen(
     var coroutineScope = rememberCoroutineScope()
     val kc = LocalSoftwareKeyboardController.current
 
-    //语音动画
-//    var alpha by remember {
-//        mutableStateOf(0F)
-//    }
-//    var replay by remember {
-//        mutableStateOf(false)
-//    }
-//    var speed by remember {
-//        mutableStateOf(2f)
-//    }
-//    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.sun))
-//    val progress by animateLottieCompositionAsState(
-//        composition = composition,
-//        speed = speed,
-//        iterations = LottieConstants.IterateForever,
-//        cancellationBehavior = LottieCancellationBehavior.Immediately,
-//        isPlaying = replay,
-//        restartOnPlay = false
-//    )
     //长按放大动画
     var boxState: sizeState_E by remember {
         mutableStateOf(sizeState_E.Small)
@@ -99,7 +79,6 @@ fun MyScreen(
     )
     //三个小图标移动动画
     var offState by remember {
-//        mutableStateOf(Offset(screenWidth / 2, screenHeight - 150))
         mutableStateOf(IntOffset(0, 0))
     }
     var dpOffState_x_l by remember {
@@ -203,17 +182,6 @@ fun MyScreen(
         inSheet = false
     }
 
-//    LaunchedEffect(key1 = inSheet) {
-//        if (!inSheet) {
-////            sheetState.animateTo(ModalBottomSheetValue.Hidden)
-////            sheetState.hide()
-////            isChange = false
-//            println("$inSheet")
-//        } else {
-//            println("$inSheet")
-//        }
-//        println("====================================")
-//    }
     ////////////////////////////////////
     Box() {
         /**
@@ -249,7 +217,7 @@ fun MyScreen(
                             painter = painterResource(R.drawable.ic_task),
                             contentDescription = "Camera",
                             contentScale = ContentScale.Inside,
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(sizeFit(dpState_1))
                         )
                     }
                     //mid
@@ -267,7 +235,7 @@ fun MyScreen(
                             painter = painterResource(R.drawable.ic_diary),
                             contentDescription = "Camera",
                             contentScale = ContentScale.Inside,
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(sizeFit(dpState_2))
                         )
                     }
                     //right
@@ -285,7 +253,7 @@ fun MyScreen(
                             painter = painterResource(R.drawable.ic_target),
                             contentDescription = "Camera",
                             contentScale = ContentScale.Inside,
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(sizeFit(dpState_3))
                         )
                     }
                     //Big
@@ -294,6 +262,32 @@ fun MyScreen(
                         onClick = {
                             constant.onAddButton = true
                             onAddButtonChange++
+
+                            //需要在弹出bottomsheet前将数据准备好
+                            if (!sheetState.isVisible)
+                                when (mainViewModel.navController_Number.value) {
+                                    1 -> {
+                                        taskViewModel.changeMyNote(MyData(date = currentTime.formatTime()))
+                                    }
+                                    2 -> {
+
+                                    }
+                                    3 -> {
+                                        val list =
+                                            diaryViewModel.state.value.filter { it.date == currentTime.formatTime() }
+                                        if (list.isEmpty()) {
+                                            diaryViewModel.changeMyDiary(
+                                                MyDiary(
+                                                    date = currentTime.formatTime(),
+                                                    dateDetail = currentTime.formatTimeDetail()
+                                                )
+                                            )
+                                        } else {
+                                            val myDiary = list[0]
+                                            diaryViewModel.changeMyDiary(myDiary)
+                                        }
+                                    }
+                                }
 
                             coroutineScope.launch {
                                 if (sheetState.isVisible) {
@@ -460,7 +454,7 @@ fun MyScreen(
                     AddContent(
                         sheetState = sheetState,
                         mainViewModel = mainViewModel,
-                        noteViewModel = noteViewModel,
+                        taskViewModel = taskViewModel,
                         diaryViewModel = diaryViewModel,
                         navController = navController
                     )
@@ -469,24 +463,13 @@ fun MyScreen(
                 // Screen content
                 Nav(navController,
                     mainViewModel,
-                    noteViewModel,
+                    taskViewModel,
                     statusViewModel,
                     diaryViewModel,
                     sheetState,
-                    onClick = {
+                    onClickNote = {
                         //赋值
-                        noteViewModel.id.value = it.id!!
-                        noteViewModel.date.value = it.date
-                        noteViewModel.title.value = it.title
-                        noteViewModel.detail.value = if (it.detail == "") "●" else it.detail
-                        noteViewModel.complete.value = it.complete
-                        noteViewModel.status.value = it.status
-                        noteViewModel.priority.value = it.status.toPriority()
-                        noteViewModel.detail_2.value =
-                            TextFieldValue(
-                                text = it.detail,
-                                selection = TextRange(it.detail.length)
-                            )
+                        taskViewModel.changeMyNote(it)
 
                         //展示
                         coroutineScope.launch {
@@ -500,13 +483,8 @@ fun MyScreen(
                     },
                     onClickDiary = {
                         //赋值
-                        diaryViewModel.myDiary.value = it
-                        diaryViewModel.id.value = it.id
-                        diaryViewModel.date.value = it.date
-                        diaryViewModel.dateDetail.value = it.dateDetail
-                        diaryViewModel.title.value = it.title
-                        diaryViewModel.detail.value = if (it.detail == "") "●" else it.detail
-                        diaryViewModel.mood.value = it.mood
+                        diaryViewModel.changeMyDiary(it)
+
                         //展示
                         coroutineScope.launch {
                             if (sheetState.isVisible) {
@@ -518,8 +496,15 @@ fun MyScreen(
                     })
             }
         }
+    }
+}
 
 
+fun sizeFit(dpState: Dp): Dp {
+    if (dpState == 55.dp) {
+        return 30.dp
+    } else {
+        return 37.dp
     }
 }
 

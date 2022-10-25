@@ -11,11 +11,11 @@ import com.myexample.MainViewModel
 import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.presentation.Diary.DiaryScreen
-import com.myexample.presentation.Diary.DirayViewModel
-import com.myexample.presentation.Note.NoteScreen
-import com.myexample.presentation.splash.SplashScreen
-import com.myexample.presentation.Satus.StatusScreen
-import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Diary.DiaryViewModel
+import com.myexample.presentation.Tasks.TaskScreen
+import com.myexample.presentation.Splash.SplashScreen
+import com.myexample.presentation.Status.StatusScreen
+import com.myexample.presentation.Tasks.TaskViewModel
 import com.myexample.presentation.target.StatusViewModel
 
 /*
@@ -27,49 +27,53 @@ import com.myexample.presentation.target.StatusViewModel
 fun Nav(
     navController: NavController,
     mainViewModel: MainViewModel,
-    noteViewModel: NoteViewModel,
+    taskViewModel: TaskViewModel,
     statusViewModel: StatusViewModel,
-    dirayViewModel: DirayViewModel,
+    diaryViewModel: DiaryViewModel,
     sheetState: ModalBottomSheetState,
-    onClick: (item: MyData) -> Unit,
+    onClickNote: (item: MyData) -> Unit,
     onClickDiary: (item: MyDiary) -> Unit
 ) {
     NavHost(
         navController = navController as NavHostController,
         startDestination = "splash_screen",
     ) {
+
         composable("splash_screen") {
             SplashScreen(
                 navController,
                 mainViewModel
             )
         }
+
         composable("note_screen") {
-            NoteScreen(
+            TaskScreen(
                 navController,
                 mainViewModel,
-                noteViewModel,
+                taskViewModel,
                 onClick = {
-                    onClick(it)
+                    onClickNote(it)
                 }
             )
         }
-        composable("diary_screen") {
-            DiaryScreen(
-                navController,
-                mainViewModel,
-                sheetState,
-                dirayViewModel,
-                onClick = {
-                    onClickDiary(it)
-                })
-        }
+
         composable("target_screen") {
             StatusScreen(
                 navController,
                 mainViewModel,
                 statusViewModel
             )
+        }
+
+        composable("diary_screen") {
+            DiaryScreen(
+                navController,
+                mainViewModel,
+                sheetState,
+                diaryViewModel,
+                onClick = {
+                    onClickDiary(it)
+                })
         }
 
     }

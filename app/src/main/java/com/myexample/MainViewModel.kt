@@ -16,11 +16,15 @@ class MainViewModel @Inject constructor(
     private val myRepository: MyRepository
 ) : ViewModel() {
 
-    //全局
+    //当前页面
     private val _navController_Number = mutableStateOf(0)
     val navController_Number: State<Int> = _navController_Number
 
     fun setNavControllerNumber(num: Int) {
         _navController_Number.value = num
     }
+
+    //是否点击了添加按钮
+    var onButton = mutableStateOf(false)
+
 }

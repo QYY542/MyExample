@@ -3,7 +3,7 @@ package com.myexample.data.MyData
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.myexample.presentation.Note.Status
+import com.myexample.presentation.Tasks.Status
 
 /*
   **Created by 24606 at 11:32 2022.

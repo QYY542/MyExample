@@ -10,12 +10,10 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.myexample.MainViewModel
 
-import com.myexample.data.MyData.MyData
-import com.myexample.data.MyDiary.MyDiary
 import com.myexample.presentation.Diary.DiaryDetail
-import com.myexample.presentation.Diary.DirayViewModel
-import com.myexample.presentation.Note.NoteAddContent
-import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Diary.DiaryViewModel
+import com.myexample.presentation.Tasks.TaskDetail
+import com.myexample.presentation.Tasks.TaskViewModel
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -23,20 +21,20 @@ import java.util.*
 fun AddContent(
     sheetState: ModalBottomSheetState,
     mainViewModel: MainViewModel,
-    noteViewModel: NoteViewModel,
-    diaryViewModel: DirayViewModel,
+    taskViewModel: TaskViewModel,
+    diaryViewModel: DiaryViewModel,
     navController: NavController
 ) {
 
     when (mainViewModel.navController_Number.value) {
         0 -> {
-            NoteAddContent(sheetState, noteViewModel)
+            TaskDetail(sheetState, taskViewModel)
         }
         1 -> {
-            NoteAddContent(sheetState, noteViewModel)
+            TaskDetail(sheetState, taskViewModel)
         }
         2 -> {
-            NoteAddContent(sheetState, noteViewModel)
+            TaskDetail(sheetState, taskViewModel)
         }
         3 -> {
             DiaryDetail(

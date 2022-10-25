@@ -2,8 +2,6 @@ package com.myexample.presentation.test
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,9 +12,8 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.compose.rememberNavController
-import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Tasks.TaskViewModel
 import com.myexample.presentation.test.naked_eye_3d.My3DTest
-import com.myexample.presentation.test.roomtest.NavTest
 import com.myexample.utils.currentTime
 import java.util.*
 
@@ -28,7 +25,7 @@ import java.util.*
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TestHome(
-    viewModel: NoteViewModel
+    viewModel: TaskViewModel
 ) {
     //测试Room数据库连接
     val navController = rememberNavController()

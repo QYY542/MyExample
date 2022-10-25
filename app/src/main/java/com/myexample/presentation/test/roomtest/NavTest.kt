@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.myexample.presentation.Note.NoteViewModel
+import com.myexample.presentation.Tasks.TaskViewModel
 
 /*
   **Created by 24606 at 0:23 2022.
@@ -16,7 +16,7 @@ import com.myexample.presentation.Note.NoteViewModel
 @Composable
 fun NavTest(
     navController: NavController,
-    viewModel: NoteViewModel
+    viewModel: TaskViewModel
 //    dirayViewModel: DirayViewModel,
 //    sheetState: ModalBottomSheetState,
 //    onClick: (item: MyData) -> Unit,

@@ -1,4 +1,4 @@
-package com.myexample.presentation.Note
+package com.myexample.presentation.Tasks
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color

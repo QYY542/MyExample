@@ -16,7 +16,7 @@ data class MyDiary(
     val id: Int? = null,
     var title: String = "",
     var detail: String = "",
-    var date: String = "2022-9-9",
-    var dateDetail: String = "9,9,2022 15:20",
+    var date: String = "2022-10-24",
+    var dateDetail: String = "",
     var mood: Mood = Mood.AWESOME
 )

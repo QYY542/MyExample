@@ -1,4 +1,4 @@
-package com.myexample.presentation.splash
+package com.myexample.presentation.Splash
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box

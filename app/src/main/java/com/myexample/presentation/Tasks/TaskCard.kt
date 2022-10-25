@@ -1,4 +1,4 @@
-package com.myexample.presentation.Note
+package com.myexample.presentation.Tasks
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -29,10 +29,10 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun NoteCard(
+fun TaskCard(
     modifier: Modifier,
     item: MyData,
-    viewModel: NoteViewModel,
+    taskViewModel: TaskViewModel,
     onClick: (item: MyData) -> Unit
 ) {
     val context = LocalContext.current
@@ -58,7 +58,7 @@ fun NoteCard(
                 .combinedClickable(
                     onClick = {
                         //逻辑在外面写，执行在这里
-                        onClick(item)
+                        onClick(myData)
                     },
                     onDoubleClick = {
                         vibrate_2(context)
@@ -70,7 +70,7 @@ fun NoteCard(
                             myData.status = Status.INCOMPLETED_GREEN
                         }
 
-                        viewModel.insert(myData)
+                        taskViewModel.update(myData)
                     },
                     onLongClick = {
                         vibrate(context)
@@ -88,7 +88,7 @@ fun NoteCard(
                                 Status.COMPLETED
                             }
                         }
-                        viewModel.insert(myData)
+                        taskViewModel.update(myData)
 
 
                     }
@@ -109,7 +109,7 @@ fun NoteCard(
                         } else {
                             myData.status = Status.INCOMPLETED_GREEN
                         }
-                        viewModel.insert(myData)
+                        taskViewModel.update(myData)
 
                     }, modifier = Modifier.size(30.dp)) {
 
@@ -141,7 +141,7 @@ fun NoteCard(
                         doubleClick++
                         vibrate_2(context)
                         if (doubleClick % 2 == 0) {
-                            item.id?.let { viewModel.deleteById(it) }
+                            myData.id?.let { taskViewModel.deleteById(it) }
                         }
 
                     }, modifier = Modifier.size(30.dp)) {
@@ -157,7 +157,7 @@ fun NoteCard(
                 }
             }
 
-            if (item.detail.isNotBlank() && item.detail != "●") {
+            if (myData.detail.isNotBlank() && myData.detail != "●") {
                 Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Spacer(Modifier.width(8.dp))
