@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myexample.data.MyDiary.MyDiary
 import com.myexample.repository.MyRepository
+import com.myexample.utils.currentTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,13 +24,6 @@ class DirayViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow<List<MyDiary>>(listOf())
     val state: StateFlow<List<MyDiary>> = _state
-
-    private val _refresh = MutableStateFlow<Int>(0)
-    val refresh: StateFlow<Int> = _refresh
-
-    fun onRefresh() {
-        _refresh.value++
-    }
 
     fun getAllData() {
         viewModelScope.launch {
@@ -51,7 +45,6 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.insertDiray(myDiary)
             getAllData()
-            onRefresh()
         }
     }
 
@@ -59,7 +52,6 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.deleteAllDiray()
             getAllData()
-            onRefresh()
         }
     }
 
@@ -67,7 +59,6 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.deleteByIdDiray(id)
             getAllData()
-            onRefresh()
         }
     }
 
@@ -75,23 +66,27 @@ class DirayViewModel @Inject constructor(
         viewModelScope.launch {
             myRepository.updateDiray(myDiary)
             getAllData()
-            onRefresh()
         }
     }
 
     init {
         viewModelScope.launch {
             getAllData()
-            onRefresh()
         }
     }
 
     //
-    var id: MutableState<Int?> = mutableStateOf(0)
+    val myDiary = mutableStateOf(MyDiary())
+    
+    val id: MutableState<Int?> = mutableStateOf(0)
 
-    var title = mutableStateOf("")
+    val title = mutableStateOf("")
 
-    var detail = mutableStateOf("")
+    val detail = mutableStateOf("")
 
-    var date = mutableStateOf("")
+    val date = mutableStateOf("")
+
+    val dateDetail = mutableStateOf(currentTime.formatTimeDetail())
+
+    val mood = mutableStateOf(Mood.AWESOME)
 }

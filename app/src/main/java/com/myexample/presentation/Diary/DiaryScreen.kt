@@ -74,16 +74,7 @@ fun DirayHome(
     val state by dirayViewModel.state.collectAsState()
     val context = LocalContext.current
     var coroutineScope = rememberCoroutineScope()
-    val refresh by dirayViewModel.refresh.collectAsState()
 
-    var list by remember {
-        mutableStateOf(state.reversed())
-    }
-
-    LaunchedEffect(key1 = refresh) {
-        list = state.reversed()
-        Log.d("====", "refresh")
-    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -121,9 +112,7 @@ fun DirayHome(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    itemsIndexed(list) { index, item ->
-
-
+                    itemsIndexed(state.sortedBy { it.date }.reversed()) { index, item ->
                         ///
                         Card(
                             modifier = Modifier
@@ -179,12 +168,10 @@ fun DirayHome(
 
                                         androidx.compose.material3.IconButton(onClick = {
                                             doubleClick++
-                                            vibrate(context)
+                                            vibrate_2(context)
                                             if (doubleClick % 2 == 0) {
-                                                vibrate_2(context)
                                                 item.id?.let { dirayViewModel.deleteById(it) }
                                             }
-                                            dirayViewModel.onRefresh()
                                         }, modifier = Modifier.size(30.dp)) {
 
                                             Icon(

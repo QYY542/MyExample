@@ -6,7 +6,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myexample.data.MyData.MyData
-import com.myexample.presentation.Priority
 import com.myexample.repository.MyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -22,17 +21,9 @@ class NoteViewModel @Inject constructor(
     private val myRepository: MyRepository
 ) : ViewModel() {
 
-
     //第一页
     private val _state = MutableStateFlow<List<MyData>>(listOf())
     val state: StateFlow<List<MyData>> = _state
-
-    private val _refresh = MutableStateFlow<Int>(0)
-    val refresh: StateFlow<Int> = _refresh
-
-    fun onRefresh() {
-        _refresh.value++
-    }
 
     fun getAllData() {
         viewModelScope.launch {
@@ -46,28 +37,24 @@ class NoteViewModel @Inject constructor(
     fun insert(myData: MyData?) {
         viewModelScope.launch {
             myRepository.insert(myData)
-            onRefresh()
         }
     }
 
     fun deleteAll() {
         viewModelScope.launch {
             myRepository.deleteAll()
-            onRefresh()
         }
     }
 
     fun deleteById(id: Int) {
         viewModelScope.launch {
             myRepository.deleteById(id)
-            onRefresh()
         }
     }
 
     fun update(myData: MyData?) {
         viewModelScope.launch {
             myRepository.update(myData)
-            onRefresh()
         }
     }
 

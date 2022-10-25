@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.myexample.R
+import com.myexample.data.MyData.MyData
 import com.myexample.data.MyDiary.MyDiary
-import com.myexample.presentation.SheetHandle
+import com.myexample.presentation.Note.SheetHandle
 import com.myexample.presentation.ui.theme.Purple
 import com.myexample.utils.constant
 import com.myexample.utils.currentTime
@@ -40,8 +41,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun DiaryDetail(
-    item: MyDiary,
-    navController: NavController,
     sheetState: ModalBottomSheetState,
     diaryViewModel: DirayViewModel
 ) {
@@ -53,59 +52,30 @@ fun DiaryDetail(
 
 //    Text(text = item.id.toString())
 
-    var id: Int? by remember {
-        mutableStateOf(null)
-    }
-    var title by remember {
-        mutableStateOf("")
-    }
-    var detail by remember {
-        mutableStateOf("")
-    }
-    var date by remember {
-        mutableStateOf("")
-    }
-    var mood by remember {
-        mutableStateOf(Mood.AWESOME)
-    }
+    val id = diaryViewModel.id
+    val title = diaryViewModel.title
+    val detail = diaryViewModel.detail
+    val date = diaryViewModel.date
+    val dateDetail = diaryViewModel.dateDetail
+    val mood = diaryViewModel.mood
 
-
-    LaunchedEffect(
-        key1 = item,
-        key2 = constant.onAddButton,
-        key3 = constant.onAddButtonChange
-    ) {
-        if (constant.onAddButton) {
-            var item = MyDiary()
-            state.forEach {
-                if (it.date.equals(currentTime.formatTime())) {
-                    item = it
-                }
-            }
-            id = item.id
-            title = item.title
-            detail = item.detail
-            date = currentTime.formatTime()
-//            date = item.date
-            mood = item.mood
-        } else {
-            id = item.id
-            title = item.title
-            detail = item.detail
-            date = item.date
-            mood = item.mood
-        }
-    }
+    val myDiary = MyDiary(
+        id = id.value,
+        title = title.value,
+        detail = detail.value,
+        date = date.value,
+        dateDetail = dateDetail.value,
+        mood = mood.value
+    )
 
     LaunchedEffect(key1 = sheetState.isVisible) {
-        if (!sheetState.isVisible && date != currentTime.formatTime()) {
-            id = null
-            title = ""
-            detail = ""
-            date = currentTime.formatTime()
-            mood = Mood.AWESOME
+        if (!sheetState.isVisible && date.value != currentTime.formatTime()) {
+            id.value = null
+            title.value = ""
+            detail.value = ""
+            date.value = currentTime.formatTime()
+            mood.value = Mood.AWESOME
         }
-
     }
 
     Column(
@@ -118,33 +88,28 @@ fun DiaryDetail(
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                text = date,
+                text = date.value,
                 fontFamily = FontFamily(Font(R.font.rubik_bold)),
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
             )
             Button(
                 onClick = {
-                    diaryViewModel.onRefresh()
-                    if (date.equals("")) {
-                        date = currentTime.formatTime()
+                    if (date.value == "") {
+                        date.value = currentTime.formatTime()
                     }
-                    val myDiary = MyDiary(
-                        id = id,
-                        title = title,
-                        detail = detail,
-                        date = date,
-                        dateDetail = currentTime.formatTimeDetail(),
-                        mood = mood
-                    )
-                    if (!title.equals("")) {
+                    myDiary.title = title.value
+                    myDiary.detail = detail.value
+                    myDiary.date = date.value
+                    myDiary.dateDetail = currentTime.formatTimeDetail()
+                    myDiary.mood = mood.value
+                    if (title.value != "") {
                         diaryViewModel.insert(myDiary)
                     }
 
                     coroutineScope.launch {
                         sheetState.hide()
                     }
-                    diaryViewModel.onRefresh()
                 }, modifier = Modifier
                     .height(30.dp)
                     .width(90.dp),
@@ -161,28 +126,24 @@ fun DiaryDetail(
         )
 
         EntryMoodSection(
-            currentMood = mood,
+            currentMood = mood.value,
         ) {
-            diaryViewModel.onRefresh()
-            mood = it
-            item.mood = mood
+            mood.value = it
+            myDiary.mood = mood.value
 //            item.date = currentTime.formatTime()
-            item.dateDetail = currentTime.formatTimeDetail()
-            diaryViewModel.update(item)
-            diaryViewModel.onRefresh()
+            myDiary.dateDetail = currentTime.formatTimeDetail()
+            diaryViewModel.update(myDiary)
         }
 
-
+        //title
         OutlinedTextField(
-            value = title,
+            value = title.value,
             onValueChange = {
-                diaryViewModel.onRefresh()
-                title = it
-                item.title = it
+                title.value = it
+                myDiary.title = it
 //                item.date = currentTime.formatTime()
-                item.dateDetail = currentTime.formatTimeDetail()
-                diaryViewModel.update(item)
-                diaryViewModel.onRefresh()
+                myDiary.dateDetail = currentTime.formatTimeDetail()
+                diaryViewModel.update(myDiary)
             },
             label = { Text("Title", style = MaterialTheme.typography.titleLarge) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -196,17 +157,20 @@ fun DiaryDetail(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(25.dp)
         )
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(value = date.value, onValueChange = {
+            date.value = it
+            myDiary.date = it
+        })
+        //content
         OutlinedTextField(
-            value = detail,
+            value = detail.value,
             onValueChange = {
-                diaryViewModel.onRefresh()
-                detail = it
-                item.detail = it
+                detail.value = it
+                myDiary.detail = it
 //                item.date = currentTime.formatTime()
-                item.dateDetail = currentTime.formatTimeDetail()
-                diaryViewModel.update(item)
-                diaryViewModel.onRefresh()
+                myDiary.dateDetail = currentTime.formatTimeDetail()
+                diaryViewModel.update(myDiary)
             },
             label = { Text("Content", style = MaterialTheme.typography.titleMedium) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -267,9 +231,4 @@ private fun MoodItem(mood: Mood, chosen: Boolean, onMoodChange: () -> Unit) {
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun DiaryDetailPreview() {
 }

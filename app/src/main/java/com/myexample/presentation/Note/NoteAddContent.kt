@@ -1,18 +1,17 @@
-package com.myexample.presentation
+package com.myexample.presentation.Note
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,66 +25,27 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.myexample.MainViewModel
-
 import com.myexample.R
 import com.myexample.data.MyData.MyData
-import com.myexample.data.MyDiary.MyDiary
-import com.myexample.presentation.Diary.DiaryDetail
-import com.myexample.presentation.Diary.DirayViewModel
-import com.myexample.presentation.Note.NoteViewModel
-import com.myexample.presentation.Note.Status
-import com.myexample.presentation.Note.toPriority
 import com.myexample.presentation.ui.theme.Green
 import com.myexample.presentation.ui.theme.Orange
 import com.myexample.presentation.ui.theme.Purple
 import com.myexample.presentation.ui.theme.Red
 import com.myexample.utils.currentTime
 import kotlinx.coroutines.launch
-import java.util.*
+
+/*
+  **Created by 24606 at 8:55 2022.
+*/
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddTaskBottomSheetContent(
-    sheetState: ModalBottomSheetState,
-    mainViewModel: MainViewModel,
-    noteViewModel: NoteViewModel,
-    diaryViewModel: DirayViewModel,
-    item: MyData,
-    itemDiary: MyDiary,
-    navController: NavController
-) {
-
-    when (mainViewModel.navController_Number.value) {
-        0 -> {
-            AddTaskBottomSheetContentNote(sheetState, noteViewModel, item)
-        }
-        1 -> {
-            AddTaskBottomSheetContentNote(sheetState, noteViewModel, item)
-        }
-        2 -> {
-            AddTaskBottomSheetContentNote(sheetState, noteViewModel, item)
-        }
-        3 -> {
-            DiaryDetail(
-                item = itemDiary,
-                navController = navController,
-                sheetState = sheetState,
-                diaryViewModel = diaryViewModel
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun AddTaskBottomSheetContentNote(
+fun NoteAddContent(
     sheetState: ModalBottomSheetState,
     viewModel: NoteViewModel,
-    item: MyData
 ) {
 
 
@@ -121,8 +81,8 @@ fun AddTaskBottomSheetContentNote(
             title.value = ""
             detail.value = "●"
             date.value = currentTime.formatTime()
+            complete.value = false
             priority.value = Priority.LOW
-
         }
         detail_2.value =
             TextFieldValue(text = detail.value, selection = TextRange(detail.value.length))
@@ -142,7 +102,7 @@ fun AddTaskBottomSheetContentNote(
 
         SheetHandle(Modifier.align(Alignment.CenterHorizontally))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
+            androidx.compose.material.Text(
                 text = "Add Task",
                 fontFamily = FontFamily(Font(R.font.rubik_bold)),
                 fontSize = 25.sp,
@@ -151,7 +111,7 @@ fun AddTaskBottomSheetContentNote(
             Button(
                 onClick = {
                     focusManager.clearFocus()
-                    if (date.equals("")) {
+                    if (date.value == "") {
                         date.value = currentTime.formatTime()
                     }
 //                    if (detail.equals("●")) {
@@ -167,7 +127,7 @@ fun AddTaskBottomSheetContentNote(
                     } else {
                         myData.status = getStatus(priority.value)
                     }
-                    if (!title.equals("")) {
+                    if (title.value != "") {
                         viewModel.insert(myData)
                     }
                     coroutineScope.launch {
@@ -179,7 +139,7 @@ fun AddTaskBottomSheetContentNote(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Purple)
             ) {
-                Text(
+                androidx.compose.material.Text(
                     text = "Add"
                 )
             }
@@ -192,7 +152,7 @@ fun AddTaskBottomSheetContentNote(
             onValueChange = {
                 title.value = it
 
-                if (date.equals("")) {
+                if (date.value == "") {
                     date.value = currentTime.formatTime()
                 }
                 myData.title = title.value
@@ -202,12 +162,12 @@ fun AddTaskBottomSheetContentNote(
                 } else {
                     myData.status = getStatus(priority.value)
                 }
-                if (!title.equals("")) {
+                if (title.value != "") {
                     viewModel.update(myData)
                 }
             },
             label = {
-                androidx.compose.material3.Text(
+                Text(
                     "Title",
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -235,10 +195,10 @@ fun AddTaskBottomSheetContentNote(
             onValueChange = {
                 detail_2.value = it
                 ableToTextNextLine = true
-                if (date.equals("")) {
+                if (date.value == "") {
                     date.value = currentTime.formatTime()
                 }
-                if (detail_2.value.text.equals("")) {
+                if (detail_2.value.text == "") {
                     detail.value = "●"
                     detail_2.value =
                         TextFieldValue(
@@ -253,12 +213,12 @@ fun AddTaskBottomSheetContentNote(
                 } else {
                     myData.status = getStatus(priority.value)
                 }
-                if (!title.equals("")) {
+                if (title.value != "") {
                     viewModel.update(myData)
                 }
             },
             label = {
-                androidx.compose.material3.Text(
+                Text(
                     "Content",
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -386,7 +346,7 @@ fun PriorityTabRow(
     ) {
         priorities.forEachIndexed { index, it ->
             Tab(
-                text = { Text(it.title) },
+                text = { androidx.compose.material.Text(it.title) },
                 selected = selectedPriority.toInt() == index,
                 onClick = {
                     onChange(index.toPriority())
@@ -418,4 +378,3 @@ fun SheetHandle(modifier: Modifier = Modifier) {
             .padding(5.dp)
     )
 }
-

@@ -3,7 +3,6 @@ package com.myexample.presentation.Note
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import com.myexample.R
-import com.myexample.presentation.Priority
 import com.myexample.presentation.ui.theme.*
 
 

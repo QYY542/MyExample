@@ -67,7 +67,6 @@ fun MyScreen(
     var coroutineScope = rememberCoroutineScope()
     val kc = LocalSoftwareKeyboardController.current
 
-
     //语音动画
 //    var alpha by remember {
 //        mutableStateOf(0F)
@@ -180,14 +179,7 @@ fun MyScreen(
     val sheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-    var item by remember {
-        mutableStateOf(MyData())
-    }
-
-    var itemDiary by remember {
-        mutableStateOf(MyDiary())
-    }
-
+    //响应键盘伸缩
     var inSheet by remember {
         mutableStateOf(false)
     }
@@ -202,9 +194,7 @@ fun MyScreen(
         }
     }
 
-
-
-
+    //响应返回键
     BackHandler(enabled = inSheet) {
         coroutineScope.launch {
             sheetState.animateTo(ModalBottomSheetValue.Hidden)
@@ -302,7 +292,6 @@ fun MyScreen(
                     FloatingActionButton(
                         backgroundColor = Color(114, 137, 196),
                         onClick = {
-                            item = MyData()
                             constant.onAddButton = true
                             onAddButtonChange++
 
@@ -468,13 +457,11 @@ fun MyScreen(
                 sheetShape = RoundedCornerShape(topEnd = 25.dp, topStart = 25.dp),
                 sheetContent = {
 
-                    AddTaskBottomSheetContent(
+                    AddContent(
                         sheetState = sheetState,
                         mainViewModel = mainViewModel,
                         noteViewModel = noteViewModel,
                         diaryViewModel = diaryViewModel,
-                        item = item,
-                        itemDiary = itemDiary,
                         navController = navController
                     )
 
@@ -495,9 +482,6 @@ fun MyScreen(
                         noteViewModel.complete.value = it.complete
                         noteViewModel.status.value = it.status
                         noteViewModel.priority.value = it.status.toPriority()
-//                    if (it.detail == "") {
-//                        viewModel.detail.value = "●"
-//                    }
                         noteViewModel.detail_2.value =
                             TextFieldValue(
                                 text = it.detail,
@@ -511,12 +495,26 @@ fun MyScreen(
                             } else {
                                 sheetState.animateTo(ModalBottomSheetValue.Expanded)
                             }
-//                        sheetState.show()
                         }
 
                     },
                     onClickDiary = {
-                        itemDiary = it
+                        //赋值
+                        diaryViewModel.myDiary.value = it
+                        diaryViewModel.id.value = it.id
+                        diaryViewModel.date.value = it.date
+                        diaryViewModel.dateDetail.value = it.dateDetail
+                        diaryViewModel.title.value = it.title
+                        diaryViewModel.detail.value = if (it.detail == "") "●" else it.detail
+                        diaryViewModel.mood.value = it.mood
+                        //展示
+                        coroutineScope.launch {
+                            if (sheetState.isVisible) {
+                                sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                            } else {
+                                sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                            }
+                        }
                     })
             }
         }

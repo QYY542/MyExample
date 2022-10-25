@@ -189,7 +189,6 @@ fun NoteHome(
                     ) { selected, year, month, day ->
                         val selectTime = "$year-$month-$day"
                         constant.selectTime = selectTime
-                        viewModel.onRefresh()
                         showDataPicker = !showDataPicker
                     }
                 }
